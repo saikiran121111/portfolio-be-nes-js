@@ -1,4 +1,4 @@
-import { IEducation, IExperience, IProjects, ISkill } from './user.interface';
+import { ICertifications, IEducation, IExperience, IProjects, ISkill } from './user.interface';
 
 
 export interface IPortfolio {
@@ -13,6 +13,7 @@ export interface IPortfolio {
   experiences: IExperience[];
   projects?: IProjects[];
   education: IEducation[];
+  certifications?: ICertifications[];
 }
 
 export interface ISocials {

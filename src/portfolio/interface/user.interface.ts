@@ -34,3 +34,10 @@ export interface IEducation {
   endDate: Date | null;
   description?: string | null;
 }
+
+export interface ICertifications {
+  title: string;
+  issuer: string;
+  date: Date;
+  link: string | null;
+}
