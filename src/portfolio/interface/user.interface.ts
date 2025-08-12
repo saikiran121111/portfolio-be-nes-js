@@ -41,3 +41,9 @@ export interface ICertifications {
   date: Date;
   link: string | null;
 }
+
+export interface IAchievements {
+  title: string;
+  date: Date | null;
+  link: string | null;
+}

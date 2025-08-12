@@ -17,6 +17,7 @@ export class PortfolioService {
         projects: true,
         education: true,
         certifications: true,
+        achievements: true,
       },
     });
     if (!user) {
