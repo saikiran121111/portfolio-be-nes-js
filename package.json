@@ -37,7 +37,7 @@
     "prisma:studio:local": "dotenv -e env/local/.env.prisma -- npx prisma studio",
     "prisma:studio:develop": "dotenv -e env/develop/.env.prisma -- npx prisma studio",
     "start:local": "dotenv -e env/local/.env.prisma -- nest start --watch",
-    "start:develop": "dotenv -e env/develop/.env.prisma -- nest start"
+    "start:develop": "dotenv -e env/develop/.env.prisma -- nest start --watch"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
