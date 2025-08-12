@@ -71,15 +71,24 @@ function mapLanguagesFromDb(language: Language): ILanguages {
   };
 }
 
+// Compact helper to normalize summary
+const toSummary = (v: any): ISummary | null => {
+  if (v == null) return null;
+  if (typeof v === 'string') {
+    try { return JSON.parse(v) as ISummary; } catch { return null; }
+  }
+  return typeof v === 'object' ? (v as ISummary) : null;
+};
+
 function mapScanReportsFromDb(scanReport: ScanReport): IscanReports {
-  const summary = typeof scanReport.summary === 'string' ? JSON.parse(scanReport.summary) as ISummary : null;
+  const summary = toSummary((scanReport as any).summary);
   return {
     type: scanReport.type,
     commitSha: scanReport.commitSha,
     runAt: scanReport.runAt,
     artifactUrl: scanReport.artifactUrl,
-    summary: summary,
-  }
+    summary,
+  };
 }
 
 function mapSocialsFromDb(socialsData: any) {
