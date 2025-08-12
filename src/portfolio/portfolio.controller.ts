@@ -6,7 +6,7 @@ import { HEADER_VERSION } from '../constants/headerVersion';
 export class PortfolioController {
   constructor(private readonly portfolioService: PortfolioService) {}
 
-  @Get('users') // GET /api/v1/portfolio/users
+  @Get('users')
   @Version(HEADER_VERSION)
   async getAllUsers() {
     return await this.portfolioService.getAllUsers();
