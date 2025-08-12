@@ -14,3 +14,14 @@ export interface IExperience {
   bullets: string[];
   techStack: string[];
 }
+
+export interface IProjects{
+  title: string;
+  description: string;
+  repoUrl: string | null;
+  liveUrl: string | null;
+  tech: string[];
+  highlights: string[];
+  startDate: Date | null;
+  endDate: Date | null;
+}
