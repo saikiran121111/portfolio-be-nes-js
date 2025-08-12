@@ -7,7 +7,7 @@ import { ApiHeader } from '@nestjs/swagger';
 export class PortfolioController {
   constructor(private readonly portfolioService: PortfolioService) {}
 
-  @Get('users')
+  @Get('user')
   @Version('1')
   @ApiHeader({
     name: 'Version',
@@ -19,7 +19,7 @@ export class PortfolioController {
     return await this.portfolioService.getPortfolioV1();
   }
 
-  @Get('users')
+  @Get('user')
   @Version(HEADER_VERSION)
   @ApiHeader({
     name: 'Version',
