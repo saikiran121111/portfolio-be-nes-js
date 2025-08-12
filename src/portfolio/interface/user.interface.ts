@@ -25,3 +25,12 @@ export interface IProjects{
   startDate: Date | null;
   endDate: Date | null;
 }
+
+export interface IEducation {
+  institution: string;
+  degree: string;
+  field: string | null;
+  startDate: Date;
+  endDate: Date | null;
+  description?: string | null;
+}

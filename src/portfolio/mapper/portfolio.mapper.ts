@@ -1,5 +1,5 @@
-import { User, Skill, Experience, Project } from '@prisma/client';
-import { IExperience, IProjects, ISkill } from '../interface/user.interface';
+import { User, Skill, Experience, Project, Education } from '@prisma/client';
+import { IEducation, IExperience, IProjects, ISkill } from '../interface/user.interface';
 import { IPortfolio } from '../interface/portfolio.interface';
 
 function mapSkillFromDb(skill: Skill): ISkill {
@@ -36,6 +36,17 @@ function mapprojectsFromDb(projects: Project): IProjects {
   };
 }
 
+function mapeducationFromDb(education: Education): IEducation {
+  return {
+    institution: education.institution,
+    degree: education.degree,
+    field: education.field,
+    startDate: education.startDate,
+    endDate: education.endDate,
+    description: education.description || null,
+  };
+}
+
 function mapSocialsFromDb(socialsData: any) {
   if (!socialsData) return undefined;
   try {
@@ -51,7 +62,7 @@ function mapSocialsFromDb(socialsData: any) {
   return undefined;
 }
 
-export function mapPortfolioFromDb(user: User & { skills: Skill[], experiences: Experience[], projects: Project[] }): IPortfolio {
+export function mapPortfolioFromDb(user: User & { skills: Skill[], experiences: Experience[], projects: Project[], education: Education[] }): IPortfolio {
   return {
     name: user.name,
     email: user.email,
@@ -63,5 +74,6 @@ export function mapPortfolioFromDb(user: User & { skills: Skill[], experiences: 
     skills: user.skills.map(mapSkillFromDb),
     experiences: user.experiences.map(mapexperienceFromDb),
     projects: user.projects.map(mapprojectsFromDb),
+    education: user.education.map(mapeducationFromDb),
   };
 }
