@@ -19,10 +19,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "docker:up": "docker compose --env-file .env.docker up -d",
-    "docker:down": "docker compose --env-file .env.docker down",
-    "docker:logs": "docker compose --env-file .env.docker logs -f",
-    "docker:ps": "docker compose --env-file .env.docker ps"
+    "docker:up": "docker compose --env-file env/local/.env.docker up -d",
+    "docker:down": "docker compose --env-file env/local/.env.docker down",
+    "docker:logs": "docker compose --env-file env/local/.env.docker logs -f",
+    "docker:ps": "docker compose --env-file env/local/.env.docker ps"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
