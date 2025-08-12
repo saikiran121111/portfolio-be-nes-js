@@ -1,15 +1,145 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           Int           @id @default(autoincrement())
+  name         String
+  email        String        @unique
+  role         String        @default("admin")
+  password     String
+  avatarUrl    String?
+  headline     String?       // e.g., "Backend Developer | Java, Spring Boot"
+  summary      String?       // Short intro / professional summary
+  location     String?
+  phone        String?
+  socials      Json?         // { linkedin, github, twitter, portfolio }
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  experiences  Experience[]
+  projects     Project[]
+  skills       Skill[]
+  education    Education[]
+  certifications Certification[]
+  achievements Achievement[]
+  languages    Language[]
+  scanReports  ScanReport[]
+}
+
+model Experience {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  title       String
+  company     String
+  location    String?
+  startDate   DateTime
+  endDate     DateTime?
+  description String?
+  bullets     String[] // List of accomplishments
+  techStack   String[] // e.g., ["Java", "Spring Boot", "AWS"]
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  title       String
+  description String
+  repoUrl     String?
+  liveUrl     String?
+  tech        String[]
+  highlights  String[] // main features or learning points
+  startDate   DateTime?
+  endDate     DateTime?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Skill {
+  id       Int    @id @default(autoincrement())
+  userId   Int
+  name     String
+  category String // e.g., "Backend", "Frontend", "Database", "DevOps"
+  level    String // e.g., "Beginner", "Intermediate", "Advanced"
+  order    Int    @default(0)
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Education {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  institution String
+  degree      String
+  field       String?
+  startDate   DateTime
+  endDate     DateTime?
+  location    String?
+  description String?
+  order       Int      @default(0)
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Certification {
+  id       Int      @id @default(autoincrement())
+  userId   Int
+  title    String
+  issuer   String
+  date     DateTime
+  link     String?
+  order    Int      @default(0)
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Achievement {
+  id       Int      @id @default(autoincrement())
+  userId   Int
+  title    String
+  date     DateTime?
+  link     String?
+  order    Int      @default(0)
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Language {
+  id       Int    @id @default(autoincrement())
+  userId   Int
+  name     String // e.g., "English", "Telugu"
+  level    String // e.g., "Native", "Fluent", "Intermediate"
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model ScanReport {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  type        String   // 'sonar' | 'coverage' | 'security'
+  commitSha   String?
+  runAt       DateTime @default(now())
+  summary     Json
+  artifactUrl String?
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Setting {
+  id    Int    @id @default(autoincrement())
+  key   String @unique
+  value Json
 }
