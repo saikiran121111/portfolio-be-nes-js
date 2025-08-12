@@ -1,9 +1,5 @@
 import { IExperience, ISkill } from './user.interface';
 
-/**
- * The IUser interface represents a subset of the User model,
- * containing only the fields required for the portfolio.
- */
 
 export interface IPortfolio {
   name: string;
