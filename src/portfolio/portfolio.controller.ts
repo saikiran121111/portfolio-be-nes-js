@@ -1,6 +1,7 @@
 import { Controller, Get, Version } from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { HEADER_VERSION } from '../constants/headerVersion';
+import { ApiHeader } from '@nestjs/swagger';
 
 @Controller('api/portfolio')
 export class PortfolioController {
@@ -8,6 +9,12 @@ export class PortfolioController {
 
   @Get('users')
   @Version(HEADER_VERSION)
+  @ApiHeader({
+    name: 'Version',
+    description: 'API version header',
+    required: false,
+    example: HEADER_VERSION,
+  })
   async getAllUsers() {
     return await this.portfolioService.getAllUsers();
   }
