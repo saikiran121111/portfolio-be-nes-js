@@ -29,9 +29,10 @@ export class PortfolioController {
     required: false,
     example: HEADER_VERSION,
   })
-  async getUserV2(): Promise<any> {
+  async getUserV2(): Promise<PortfolioResponseDto | null> {
     const data = await this.portfolioService.getPortfolioV2();
-    return data ? instanceToPlain(toPortfolioResponseDto(data)) : null;
+    if (!data) return null;
+    return instanceToPlain(toPortfolioResponseDto(data)) as PortfolioResponseDto;
   }
 
 }
