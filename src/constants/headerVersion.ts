@@ -1,1 +1,1 @@
-export const HEADER_VERSION = '1';
+export const HEADER_VERSION = '2';

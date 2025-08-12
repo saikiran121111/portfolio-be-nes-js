@@ -1,24 +1,20 @@
-version: '3.8'
 services:
   postgres:
     image: postgres:15
     restart: unless-stopped
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: portfolio_dev
+    env_file:
+      - env/local/.env.docker
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
 
   pgadmin:
     image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ruku@123.com
-      PGADMIN_DEFAULT_PASSWORD: ruku
+    env_file:
+      - env/local/.env.docker
     ports:
-      - "8080:80"
+      - "${PGADMIN_PORT:-8080}:80"
 
 volumes:
   pgdata:

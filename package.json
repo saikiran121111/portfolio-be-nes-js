@@ -13,12 +13,21 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "prisma:generate": "DOTENV_CONFIG_PATH=env/local/.env.prisma npx prisma generate",
+    "prisma:migrate": "npx prisma migrate dev",
+    "prisma:deploy": "npx prisma migrate deploy",
+    "prisma:studio": "npx prisma studio",
+    "prisma:seed": "node prisma/seed.ts",
+    "db:reset": "npx prisma migrate reset --force",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "docker:up": "docker compose --env-file env/local/.env.docker up -d",
+    "docker:down": "docker compose --env-file env/local/.env.docker down",
+    "docker:logs": "docker compose --env-file env/local/.env.docker logs -f",
+    "docker:ps": "docker compose --env-file env/local/.env.docker ps"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -29,7 +38,8 @@
     "dotenv": "^17.2.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "class-transformer": "^0.5.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
