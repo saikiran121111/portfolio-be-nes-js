@@ -1,5 +1,5 @@
-import { User, Skill, Experience, Project, Education, Certification, Achievement, Language } from '@prisma/client';
-import { IAchievements, ICertifications, IEducation, IExperience, ILanguages, IProjects, ISkill } from '../interface/user.interface';
+import { User, Skill, Experience, Project, Education, Certification, Achievement, Language, ScanReport } from '@prisma/client';
+import { IAchievements, ICertifications, IEducation, IExperience, ILanguages, IProjects, IscanReports, ISkill, ISummary } from '../interface/user.interface';
 import { IPortfolio } from '../interface/portfolio.interface';
 
 function mapSkillFromDb(skill: Skill): ISkill {
@@ -71,6 +71,17 @@ function mapLanguagesFromDb(language: Language): ILanguages {
   };
 }
 
+function mapScanReportsFromDb(scanReport: ScanReport): IscanReports {
+  const summary = typeof scanReport.summary === 'string' ? JSON.parse(scanReport.summary) as ISummary : null;
+  return {
+    type: scanReport.type,
+    commitSha: scanReport.commitSha,
+    runAt: scanReport.runAt,
+    artifactUrl: scanReport.artifactUrl,
+    summary: summary,
+  }
+}
+
 function mapSocialsFromDb(socialsData: any) {
   if (!socialsData) return undefined;
   try {
@@ -94,7 +105,8 @@ export function mapPortfolioFromDb(user: User &
   education: Education[], 
   certifications: Certification[],
   achievements: Achievement[],
-  languages: Language[]
+  languages: Language[],
+  scanReports: ScanReport[],
   }): IPortfolio {
   return {
     name: user.name,
@@ -111,5 +123,6 @@ export function mapPortfolioFromDb(user: User &
     certifications: user.certifications.map(mapCertificationsFromDb),
     achievements: user.achievements.map(mapAchievementsFromDb),
     languages: user.languages.map(mapLanguagesFromDb),
+    scanReports: user.scanReports.map(mapScanReportsFromDb),
   };
 }

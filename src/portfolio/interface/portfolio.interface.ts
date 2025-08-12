@@ -5,7 +5,8 @@ import {
     IExperience,
     ILanguages,
     IProjects,
-    ISkill } from './user.interface';
+    ISkill,
+    IscanReports } from './user.interface';
 
 
 export interface IPortfolio {
@@ -23,6 +24,7 @@ export interface IPortfolio {
   certifications?: ICertifications[];
   achievements?: IAchievements[];
   languages?: ILanguages[];
+  scanReports?: IscanReports[];
 }
 
 export interface ISocials {

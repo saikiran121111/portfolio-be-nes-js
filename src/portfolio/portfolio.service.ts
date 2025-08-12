@@ -19,6 +19,7 @@ export class PortfolioService {
         certifications: true,
         achievements: true,
         languages: true,
+        scanReports: true,
       },
     });
     if (!user) {
