@@ -47,3 +47,8 @@ export interface IAchievements {
   date: Date | null;
   link: string | null;
 }
+
+export interface ILanguages {
+  name: string;
+  level: string;
+}

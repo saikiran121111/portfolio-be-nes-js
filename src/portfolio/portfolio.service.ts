@@ -18,6 +18,7 @@ export class PortfolioService {
         education: true,
         certifications: true,
         achievements: true,
+        languages: true,
       },
     });
     if (!user) {
