@@ -16,7 +16,9 @@
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:deploy": "npx prisma migrate deploy",
     "prisma:studio": "npx prisma studio",
-    "prisma:seed": "node prisma/seed.ts",
+    "prisma:seed": "dotenv -e env/local/.env.prisma -- node prisma/seed.ts",
+    "prisma:seed:local": "dotenv -e env/local/.env.prisma -- node prisma/seed.ts",
+    "prisma:seed:develop": "dotenv -e env/develop/.env.prisma -- node prisma/seed.ts",
     "db:reset": "npx prisma migrate reset --force",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
@@ -27,7 +29,15 @@
     "docker:up": "docker compose --env-file env/local/.env.docker up -d",
     "docker:down": "docker compose --env-file env/local/.env.docker down",
     "docker:logs": "docker compose --env-file env/local/.env.docker logs -f",
-    "docker:ps": "docker compose --env-file env/local/.env.docker ps"
+    "docker:ps": "docker compose --env-file env/local/.env.docker ps",
+    "prisma:generate:local": "dotenv -e env/local/.env.prisma -- npx prisma generate",
+    "prisma:generate:develop": "dotenv -e env/develop/.env.prisma -- npx prisma generate",
+    "prisma:migrate:local": "dotenv -e env/local/.env.prisma -- npx prisma migrate dev",
+    "prisma:migrate:develop": "dotenv -e env/develop/.env.prisma -- npx prisma migrate dev",
+    "prisma:studio:local": "dotenv -e env/local/.env.prisma -- npx prisma studio",
+    "prisma:studio:develop": "dotenv -e env/develop/.env.prisma -- npx prisma studio",
+    "start:local": "dotenv -e env/local/.env.prisma -- nest start --watch",
+    "start:develop": "dotenv -e env/develop/.env.prisma -- nest start"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -35,11 +45,11 @@
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/swagger": "^11.2.0",
     "@prisma/client": "^6.13.0",
+    "class-transformer": "^0.5.1",
     "dotenv": "^17.2.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "swagger-ui-express": "^5.0.1",
-    "class-transformer": "^0.5.1"
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
@@ -51,6 +61,7 @@
     "@types/jest": "^30.0.0",
     "@types/node": "^22.17.1",
     "@types/supertest": "^6.0.2",
+    "dotenv-cli": "^7.4.4",
     "eslint": "^9.33.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",
