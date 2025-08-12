@@ -60,3 +60,4 @@ env/.env.docker
 env/.env.prisma
 env/local/.env.docker
 env/local/.env.prisma
+env/develop/.env.prisma
