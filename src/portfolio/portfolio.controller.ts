@@ -8,6 +8,18 @@ export class PortfolioController {
   constructor(private readonly portfolioService: PortfolioService) {}
 
   @Get('users')
+  @Version('1')
+  @ApiHeader({
+    name: 'Version',
+    description: 'API version header',
+    required: false,
+    example: '1',
+  })
+  async getUserV1() {
+    return await this.portfolioService.getPortfolioV1();
+  }
+
+  @Get('users')
   @Version(HEADER_VERSION)
   @ApiHeader({
     name: 'Version',
@@ -15,7 +27,8 @@ export class PortfolioController {
     required: false,
     example: HEADER_VERSION,
   })
-  async getAllUsers() {
-    return await this.portfolioService.getAllUsers();
+  async getUserV2() {
+    return await this.portfolioService.getPortfolioV2();
   }
+
 }
