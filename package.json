@@ -42,7 +42,9 @@
     "prisma:migrate:prod": "dotenv -e env/prod/.env.prisma -- npx prisma migrate deploy",
     "prisma:studio:prod": "dotenv -e env/prod/.env.prisma -- npx prisma studio",
     "prisma:seed:prod": "dotenv -e env/prod/.env.prisma -- node prisma/seed.ts",
-    "start:prod:db": "dotenv -e env/prod/.env.prisma -- node dist/main"
+    "start:prod:db": "dotenv -e env/prod/.env.prisma -- node dist/main",
+    "prod:bootstrap": "npm install && npm run build && npm run prisma:generate:prod && npm run prisma:migrate:prod && npm run prisma:studio:prod",
+    "prod:prepare": "npm install && npm run build && npm run prisma:generate:prod && npm run prisma:migrate:prod"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
