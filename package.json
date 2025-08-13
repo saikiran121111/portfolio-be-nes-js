@@ -37,7 +37,12 @@
     "prisma:studio:local": "dotenv -e env/local/.env.prisma -- npx prisma studio",
     "prisma:studio:develop": "dotenv -e env/develop/.env.prisma -- npx prisma studio",
     "start:local": "dotenv -e env/local/.env.prisma -- nest start --watch",
-    "start:develop": "dotenv -e env/develop/.env.prisma -- nest start --watch"
+    "start:develop": "dotenv -e env/develop/.env.prisma -- nest start --watch",
+    "prisma:generate:prod": "dotenv -e env/prod/.env.prisma -- npx prisma generate",
+    "prisma:migrate:prod": "dotenv -e env/prod/.env.prisma -- npx prisma migrate deploy",
+    "prisma:studio:prod": "dotenv -e env/prod/.env.prisma -- npx prisma studio",
+    "prisma:seed:prod": "dotenv -e env/prod/.env.prisma -- node prisma/seed.ts",
+    "start:prod:db": "dotenv -e env/prod/.env.prisma -- node dist/main"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
