@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-// removed local dotenv import to allow platform/env scripts to supply vars
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { VersioningType } from '@nestjs/common';
 import { HEADER_VERSION } from './constants/headerVersion';
