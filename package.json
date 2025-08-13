@@ -6,12 +6,14 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build",
+    "build": "dotenv -e env/local/.env.prisma -- npx prisma generate && nest build",
+    "build:deploy": "npm install && npx prisma generate && nest build && npx prisma migrate deploy",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node dist/src/main.js",
+    "start:prod:env": "dotenv -e .env -- node dist/src/main.js",
     "prisma:generate": "DOTENV_CONFIG_PATH=env/local/.env.prisma npx prisma generate",
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:deploy": "npx prisma migrate deploy",
@@ -37,7 +39,14 @@
     "prisma:studio:local": "dotenv -e env/local/.env.prisma -- npx prisma studio",
     "prisma:studio:develop": "dotenv -e env/develop/.env.prisma -- npx prisma studio",
     "start:local": "dotenv -e env/local/.env.prisma -- nest start --watch",
-    "start:develop": "dotenv -e env/develop/.env.prisma -- nest start --watch"
+    "start:develop": "dotenv -e env/develop/.env.prisma -- nest start --watch",
+    "prisma:generate:prod": "dotenv -e env/prod/.env.prisma -- npx prisma generate",
+    "prisma:migrate:prod": "dotenv -e env/prod/.env.prisma -- npx prisma migrate deploy",
+    "prisma:studio:prod": "dotenv -e env/prod/.env.prisma -- npx prisma studio",
+    "prisma:seed:prod": "dotenv -e env/prod/.env.prisma -- node prisma/seed.ts",
+    "start:prod:db": "dotenv -e env/prod/.env.prisma -- node dist/src/main.js",
+    "prod:bootstrap": "npm install && npm run build && npm run prisma:generate:prod && npm run prisma:migrate:prod && npm run prisma:studio:prod",
+    "prod:prepare": "npm install && npm run build && npm run prisma:generate:prod && npm run prisma:migrate:prod"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
