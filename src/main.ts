@@ -1,13 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { config } from 'dotenv';
+// removed local dotenv import to allow platform/env scripts to supply vars
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { VersioningType } from '@nestjs/common';
 import { HEADER_VERSION } from './constants/headerVersion';
 import { defaultVersionHeaderMiddleware } from './middleware/defaultVersionHeader.middleware';
-
-// Load environment variables from the local .env file
-config({ path: 'env/local/.env' });
 
 function setupSwagger(app) {
   const config = new DocumentBuilder()
@@ -28,12 +25,15 @@ function headerVersioning(app) {
 }
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {cors: true});
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   app.use(defaultVersionHeaderMiddleware);
   headerVersioning(app);
   setupSwagger(app);
 
-  await app.listen(process.env.PORT ?? 3002);
+  const port = parseInt(process.env.PORT ?? '3002', 10);
+  await app.listen(port, '0.0.0.0');
+  // eslint-disable-next-line no-console
+  console.log(`Server listening on 0.0.0.0:${port}`);
 }
 bootstrap();
