@@ -180,6 +180,15 @@ async function main() {
     ],
   });
 
+  // 🔟 Bottom Headlines
+  await prisma.bottomHeadline.createMany({
+    data: [
+      { userId: user.id, text: 'Open to exciting backend roles', order: 1 },
+      { userId: user.id, text: 'Java | Spring Boot | NestJS', order: 2 },
+      { userId: user.id, text: 'Building scalable APIs', order: 3 },
+    ],
+  });
+
   console.log('✅ Database seeded successfully');
 }
 

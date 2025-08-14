@@ -116,6 +116,7 @@ export function mapPortfolioFromDb(user: User &
   achievements: Achievement[],
   languages: Language[],
   scanReports: ScanReport[],
+  bottomHeadlines?: Array<{ text: string; order: number }>,
   }): IPortfolio {
   return {
     name: user.name,
@@ -133,5 +134,6 @@ export function mapPortfolioFromDb(user: User &
     achievements: user.achievements.map(mapAchievementsFromDb),
     languages: user.languages.map(mapLanguagesFromDb),
     scanReports: user.scanReports.map(mapScanReportsFromDb),
+    bottomHeadline: (user.bottomHeadlines || []).sort((a,b)=>a.order-b.order).map(b=>b.text),
   };
 }

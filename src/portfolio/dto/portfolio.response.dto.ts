@@ -46,6 +46,9 @@ export class PortfolioResponseDto {
 
   @ApiPropertyOptional({ type: () => [ScanReportDto] })
   scanReports?: ScanReportDto[];
+
+  @ApiPropertyOptional({ type: () => [String] })
+  bottomHeadline?: string[];
 }
 
 export function toPortfolioResponseDto(raw: any): PortfolioResponseDto {
