@@ -123,6 +123,7 @@ export function mapPortfolioFromDb(user: User &
     email: user.email,
     headline: user.headline ?? undefined,
     summary: user.summary ?? undefined,
+    copyrights: user.copyrights ?? undefined,
     location: user.location ?? undefined,
     phone: user.phone ?? undefined,
     socials: mapSocialsFromDb(user.socials),

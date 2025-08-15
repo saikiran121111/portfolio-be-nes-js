@@ -6,7 +6,9 @@ async function main() {
   // 1️⃣ Create user
   const user = await prisma.user.upsert({
     where: { email: 'admin@example.com' },
-    update: {},
+    update: {
+      copyrights: 'Phani, All rights reserved',
+    },
     create: {
       name: 'Phani Venkata Sai Kiran Vanapalli',
       email: 'admin@example.com',
@@ -15,6 +17,7 @@ async function main() {
       avatarUrl: 'https://avatars.githubusercontent.com/u/1?v=4',
       headline: 'Backend & Full-Stack Developer | Java, Spring Boot, NestJS',
       summary: '4+ years of experience building scalable backend systems and full-stack applications.',
+      copyrights: 'Phani, All rights reserved',
       location: 'Hyderabad, India',
       phone: '+91-9876543210',
       socials: {
@@ -187,6 +190,7 @@ async function main() {
       { userId: user.id, text: 'Java | Spring Boot | NestJS', order: 2 },
       { userId: user.id, text: 'Building scalable APIs', order: 3 },
     ],
+    skipDuplicates: true,
   });
 
   console.log('✅ Database seeded successfully');

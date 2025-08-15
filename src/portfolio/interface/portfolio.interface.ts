@@ -14,6 +14,7 @@ export interface IPortfolio {
   email: string;
   headline?: string;
   summary?: string;
+  copyrights?: string;
   location?: string;
   phone?: string;
   socials?: ISocials;

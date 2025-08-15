@@ -16,6 +16,7 @@ model User {
   avatarUrl      String?
   headline       String?
   summary        String?
+  copyrights     String?
   location       String?
   phone          String?
   socials        Json?

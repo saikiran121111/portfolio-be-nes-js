@@ -15,6 +15,9 @@ export class PortfolioResponseDto {
   summary?: string;
 
   @ApiPropertyOptional()
+  copyrights?: string;
+
+  @ApiPropertyOptional()
   location?: string;
 
   @ApiPropertyOptional()
