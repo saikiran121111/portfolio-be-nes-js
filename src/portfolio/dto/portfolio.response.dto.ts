@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { SkillDto, ExperienceDto, ProjectDto, EducationDto, CertificationDto, AchievementDto, LanguageDto, ScanReportDto, SocialsDto } from './user.response.dto';
+import { SkillDto, ExperienceDto, ProjectDto, EducationDto, CertificationDto, AchievementDto, LanguageDto, ScanReportDto, SocialsDto, ToolDocDto } from './user.response.dto';
 
 export class PortfolioResponseDto {
   @ApiProperty()
@@ -52,6 +52,10 @@ export class PortfolioResponseDto {
 
   @ApiPropertyOptional({ type: () => [String] })
   bottomHeadline?: string[];
+
+  // New: tool/docs items for frontend collapsible pointers
+  @ApiPropertyOptional({ type: () => [ToolDocDto] })
+  toolDocs?: ToolDocDto[];
 }
 
 export function toPortfolioResponseDto(raw: any): PortfolioResponseDto {

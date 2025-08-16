@@ -129,3 +129,18 @@ export class SocialsDto {
   @ApiPropertyOptional()
   portfolio?: string;
 }
+
+export class ToolDocDto {
+  @ApiProperty()
+  key!: string;
+  @ApiProperty()
+  title!: string;
+  @ApiProperty()
+  icon!: string;
+  @ApiPropertyOptional()
+  summary?: string;
+  @ApiProperty()
+  content!: string;
+  @ApiPropertyOptional()
+  order?: number;
+}

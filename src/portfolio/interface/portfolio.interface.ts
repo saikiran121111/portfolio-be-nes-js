@@ -27,12 +27,24 @@ export interface IPortfolio {
   languages?: ILanguages[];
   scanReports?: IscanReports[];
   bottomHeadline?: string[];
+  // Added: tool docs (moved from .txt files)
+  toolDocs?: IToolDoc[];
 }
 
 export interface ISocials {
   github?: string;
   linkedin?: string;
   portfolio?: string;
+}
+
+// New interface describing tool/docs items
+export interface IToolDoc {
+  key: string;
+  title: string;
+  icon: string;
+  summary?: string;
+  content: string;
+  order?: number;
 }
 
 

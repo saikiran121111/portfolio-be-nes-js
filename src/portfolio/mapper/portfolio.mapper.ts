@@ -1,6 +1,7 @@
 import { User, Skill, Experience, Project, Education, Certification, Achievement, Language, ScanReport } from '@prisma/client';
 import { IAchievements, ICertifications, IEducation, IExperience, ILanguages, IProjects, IscanReports, ISkill, ISummary } from '../interface/user.interface';
 import { IPortfolio } from '../interface/portfolio.interface';
+import { getOrderedToolDocs } from '../toolsConstants/constants';
 
 function mapSkillFromDb(skill: Skill): ISkill {
   return {
@@ -136,5 +137,7 @@ export function mapPortfolioFromDb(user: User &
     languages: user.languages.map(mapLanguagesFromDb),
     scanReports: user.scanReports.map(mapScanReportsFromDb),
     bottomHeadline: (user.bottomHeadlines || []).sort((a,b)=>a.order-b.order).map(b=>b.text),
+    // Inject constant-based tool docs (no DB)
+    toolDocs: getOrderedToolDocs(),
   };
 }
