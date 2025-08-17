@@ -285,6 +285,30 @@ describe('Portfolio Mapper', () => {
       ]);
     });
 
+    it('should map skills with null level to beginner', () => {
+      const mockUser = createMockUser({
+        skills: [
+          {
+            id: 1,
+            name: 'TypeScript',
+            category: 'Programming',
+            level: null, // Test the null level case
+            userId: 1,
+            order: 1,
+          },
+        ],
+      });
+
+      const result = mapPortfolioFromDb(mockUser);
+      expect(result.skills).toEqual([
+        {
+          name: 'TypeScript',
+          category: 'Programming',
+          level: 'beginner', // Should default to 'beginner'
+        },
+      ]);
+    });
+
     it('should map experiences correctly', () => {
       const mockUser = createMockUser({
         experiences: [
@@ -336,6 +360,40 @@ describe('Portfolio Mapper', () => {
           description: 'Learned development',
           bullets: [],
           techStack: [],
+        },
+      ]);
+    });
+
+    it('should handle experience with null bullets and techStack', () => {
+      const mockUser = createMockUser({
+        experiences: [
+          {
+            id: 1,
+            title: 'Software Engineer',
+            company: 'TechCorp',
+            location: 'New York',
+            startDate: new Date('2020-01-01'),
+            endDate: new Date('2023-01-01'),
+            description: 'Worked on various projects',
+            bullets: null, // Test null bullets
+            techStack: null, // Test null techStack
+            userId: 1,
+            order: 1,
+          },
+        ],
+      });
+
+      const result = mapPortfolioFromDb(mockUser);
+      expect(result.experiences).toEqual([
+        {
+          title: 'Software Engineer',
+          company: 'TechCorp',
+          location: 'New York',
+          startDate: new Date('2020-01-01'),
+          endDate: new Date('2023-01-01'),
+          description: 'Worked on various projects',
+          bullets: [], // Should default to empty array
+          techStack: [], // Should default to empty array
         },
       ]);
     });
@@ -395,6 +453,40 @@ describe('Portfolio Mapper', () => {
       ]);
     });
 
+    it('should handle project with null tech and highlights', () => {
+      const mockUser = createMockUser({
+        projects: [
+          {
+            id: 1,
+            title: 'Portfolio Website',
+            description: 'Personal portfolio',
+            repoUrl: 'https://github.com/john/portfolio',
+            liveUrl: 'https://johndoe.com',
+            tech: null, // Test null tech
+            highlights: null, // Test null highlights
+            startDate: new Date('2023-01-01'),
+            endDate: new Date('2023-06-01'),
+            userId: 1,
+            order: 1,
+          },
+        ],
+      });
+
+      const result = mapPortfolioFromDb(mockUser);
+      expect(result.projects).toEqual([
+        {
+          title: 'Portfolio Website',
+          description: 'Personal portfolio',
+          repoUrl: 'https://github.com/john/portfolio',
+          liveUrl: 'https://johndoe.com',
+          tech: [], // Should default to empty array
+          highlights: [], // Should default to empty array
+          startDate: new Date('2023-01-01'),
+          endDate: new Date('2023-06-01'),
+        },
+      ]);
+    });
+
     it('should map education correctly', () => {
       const mockUser = createMockUser({
         education: [
@@ -442,6 +534,36 @@ describe('Portfolio Mapper', () => {
       ]);
     });
 
+    it('should handle education with null description', () => {
+      const mockUser = createMockUser({
+        education: [
+          {
+            id: 1,
+            institution: 'University',
+            degree: 'CS',
+            field: 'Computer Science', // Correct field name
+            startDate: new Date('2015-01-01'),
+            endDate: new Date('2019-01-01'),
+            description: null, // Test null description
+            userId: 1,
+            order: 1,
+          },
+        ],
+      });
+
+      const result = mapPortfolioFromDb(mockUser);
+      expect(result.education).toEqual([
+        {
+          institution: 'University',
+          degree: 'CS',
+          field: 'Computer Science', // Correct field name
+          startDate: new Date('2015-01-01'),
+          endDate: new Date('2019-01-01'),
+          description: null, // Should remain null
+        },
+      ]);
+    });
+
     it('should map certifications correctly', () => {
       const mockUser = createMockUser({
         certifications: [
@@ -481,6 +603,32 @@ describe('Portfolio Mapper', () => {
       ]);
     });
 
+    it('should handle certification with null link', () => {
+      const mockUser = createMockUser({
+        certifications: [
+          {
+            id: 1,
+            title: 'AWS Certified', // Correct field name
+            issuer: 'Amazon',
+            date: new Date('2022-01-01'), // Correct field name
+            link: null, // Test null link
+            userId: 1,
+            order: 1,
+          },
+        ],
+      });
+
+      const result = mapPortfolioFromDb(mockUser);
+      expect(result.certifications).toEqual([
+        {
+          title: 'AWS Certified', // Correct field name
+          issuer: 'Amazon',
+          date: new Date('2022-01-01'), // Correct field name
+          link: null, // Should remain null
+        },
+      ]);
+    });
+
     it('should map achievements correctly', () => {
       const mockUser = createMockUser({
         achievements: [
@@ -512,6 +660,30 @@ describe('Portfolio Mapper', () => {
           title: 'Hackathon Winner',
           date: new Date('2022-01-01'),
           link: null,
+        },
+      ]);
+    });
+
+    it('should handle achievement with null link', () => {
+      const mockUser = createMockUser({
+        achievements: [
+          {
+            id: 1,
+            title: 'Best Developer Award',
+            date: new Date('2023-01-01'), // Correct field name
+            link: null, // Test null link
+            userId: 1,
+            order: 1,
+          },
+        ],
+      });
+
+      const result = mapPortfolioFromDb(mockUser);
+      expect(result.achievements).toEqual([
+        {
+          title: 'Best Developer Award',
+          date: new Date('2023-01-01'), // Correct field name
+          link: null, // Should remain null
         },
       ]);
     });
@@ -717,6 +889,35 @@ describe('Portfolio Mapper', () => {
       expect(result.scanReports).toBeDefined();
       expect(result.scanReports!).toHaveLength(1);
       expect(result.scanReports![0].summary).toBeNull();
+    });
+
+    it('should handle scan report summary with non-string qualityGate', () => {
+      const mockUser = createMockUser({
+        scanReports: [
+          {
+            id: 1,
+            type: 'test',
+            commitSha: 'abc123',
+            runAt: new Date('2023-01-01'),
+            artifactUrl: 'https://test.com',
+            summary: {
+              bugs: 5,
+              codeSmells: 3,
+              qualityGate: 123, // Non-string qualityGate
+            },
+            userId: 1,
+          },
+        ],
+      });
+
+      const result = mapPortfolioFromDb(mockUser);
+      expect(result.scanReports).toBeDefined();
+      expect(result.scanReports!).toHaveLength(1);
+      expect(result.scanReports![0].summary).toEqual({
+        bugs: 5,
+        codeSmells: 3,
+        // qualityGate should be omitted since it's not a string
+      });
     });
   });
 });
