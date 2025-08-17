@@ -2,7 +2,10 @@ import { Controller, Get, Version } from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { HEADER_VERSION } from '../constants/headerVersion';
 import { ApiHeader } from '@nestjs/swagger';
-import { PortfolioResponseDto, toPortfolioResponseDto } from './dto/portfolio.response.dto';
+import {
+  PortfolioResponseDto,
+  toPortfolioResponseDto,
+} from './dto/portfolio.response.dto';
 import { instanceToPlain } from 'class-transformer';
 
 @Controller('api/portfolio')
@@ -32,7 +35,8 @@ export class PortfolioController {
   async getUserV2(): Promise<PortfolioResponseDto | null> {
     const data = await this.portfolioService.getPortfolioV2();
     if (!data) return null;
-    return instanceToPlain(toPortfolioResponseDto(data)) as PortfolioResponseDto;
+    return instanceToPlain(
+      toPortfolioResponseDto(data),
+    ) as PortfolioResponseDto;
   }
-
 }

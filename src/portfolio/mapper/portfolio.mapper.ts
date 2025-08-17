@@ -1,7 +1,48 @@
-import { User, Skill, Experience, Project, Education, Certification, Achievement, Language, ScanReport } from '@prisma/client';
-import { IAchievements, ICertifications, IEducation, IExperience, ILanguages, IProjects, IscanReports, ISkill, ISummary } from '../interface/user.interface';
+import {
+  Prisma,
+  User,
+  Skill,
+  Experience,
+  Project,
+  Education,
+  Certification,
+  Achievement,
+  Language,
+  ScanReport,
+} from '@prisma/client';
+import {
+  IAchievements,
+  ICertifications,
+  IEducation,
+  IExperience,
+  ILanguages,
+  IProjects,
+  IscanReports,
+  ISkill,
+  ISummary,
+} from '../interface/user.interface';
 import { IPortfolio } from '../interface/portfolio.interface';
 import { getOrderedToolDocs } from '../toolsConstants/constants';
+
+// Lightweight helpers
+const asRecord = (v: unknown): Record<string, unknown> | undefined =>
+  v && typeof v === 'object' && !Array.isArray(v)
+    ? (v as Record<string, unknown>)
+    : undefined;
+
+const parseJsonRecord = (
+  v: Prisma.JsonValue | null | undefined,
+): Record<string, unknown> | undefined => {
+  if (!v) return undefined;
+  if (typeof v === 'string') {
+    try {
+      return asRecord(JSON.parse(v));
+    } catch {
+      return undefined;
+    }
+  }
+  return asRecord(v);
+};
 
 function mapSkillFromDb(skill: Skill): ISkill {
   return {
@@ -11,7 +52,7 @@ function mapSkillFromDb(skill: Skill): ISkill {
   };
 }
 
-function mapexperienceFromDb(experience: Experience): IExperience {
+function mapExperienceFromDb(experience: Experience): IExperience {
   return {
     title: experience.title,
     company: experience.company,
@@ -24,20 +65,20 @@ function mapexperienceFromDb(experience: Experience): IExperience {
   };
 }
 
-function mapprojectsFromDb(projects: Project): IProjects {
+function mapProjectFromDb(project: Project): IProjects {
   return {
-    title: projects.title,
-    description: projects.description,
-    repoUrl: projects.repoUrl,
-    liveUrl: projects.liveUrl,
-    tech: projects.tech || [],
-    highlights: projects.highlights || [],
-    startDate: projects.startDate,
-    endDate: projects.endDate,
+    title: project.title,
+    description: project.description,
+    repoUrl: project.repoUrl,
+    liveUrl: project.liveUrl,
+    tech: project.tech || [],
+    highlights: project.highlights || [],
+    startDate: project.startDate,
+    endDate: project.endDate,
   };
 }
 
-function mapeducationFromDb(education: Education): IEducation {
+function mapEducationFromDb(education: Education): IEducation {
   return {
     institution: education.institution,
     degree: education.degree,
@@ -48,7 +89,7 @@ function mapeducationFromDb(education: Education): IEducation {
   };
 }
 
-function mapCertificationsFromDb(certification: Certification): ICertifications {
+function mapCertificationFromDb(certification: Certification): ICertifications {
   return {
     title: certification.title,
     issuer: certification.issuer,
@@ -57,7 +98,7 @@ function mapCertificationsFromDb(certification: Certification): ICertifications 
   };
 }
 
-function mapAchievementsFromDb(achievement: Achievement): IAchievements {
+function mapAchievementFromDb(achievement: Achievement): IAchievements {
   return {
     title: achievement.title,
     date: achievement.date,
@@ -65,61 +106,83 @@ function mapAchievementsFromDb(achievement: Achievement): IAchievements {
   };
 }
 
-function mapLanguagesFromDb(language: Language): ILanguages {
-  return {
-    name: language.name,
-    level: language.level,
-  };
+function mapLanguageFromDb(language: Language): ILanguages {
+  return { name: language.name, level: language.level };
 }
 
 // Compact helper to normalize summary
-const toSummary = (v: any): ISummary | null => {
-  if (v == null) return null;
-  if (typeof v === 'string') {
-    try { return JSON.parse(v) as ISummary; } catch { return null; }
+const toSummary = (v: Prisma.JsonValue | null | undefined): ISummary | null => {
+  const rec = parseJsonRecord(v);
+  if (!rec) return null;
+  const out: ISummary = {};
+  const numericKeys: Array<keyof ISummary> = [
+    'bugs',
+    'codeSmells',
+    'coverage',
+    'low',
+    'medium',
+    'high',
+    'vulnerabilities',
+  ];
+  for (const key of numericKeys) {
+    const val = rec[key as string];
+    if (typeof val === 'number') {
+      out[key] = val as never; // safe: narrowing above ensures number
+    }
   }
-  return typeof v === 'object' ? (v as ISummary) : null;
+  const qg = rec['qualityGate'];
+  if (typeof qg === 'string') out.qualityGate = qg;
+  return out;
 };
 
 function mapScanReportsFromDb(scanReport: ScanReport): IscanReports {
-  const summary = toSummary((scanReport as any).summary);
   return {
     type: scanReport.type,
     commitSha: scanReport.commitSha,
     runAt: scanReport.runAt,
     artifactUrl: scanReport.artifactUrl,
-    summary,
+    summary: toSummary(scanReport.summary),
   };
 }
 
-function mapSocialsFromDb(socialsData: any) {
-  if (!socialsData) return undefined;
-  try {
-    const s = typeof socialsData === 'string' ? JSON.parse(socialsData) : socialsData;
-    if (typeof s === 'object' && !Array.isArray(s)) {
-      return {
-        github: s.github,
-        linkedin: s.linkedin,
-        portfolio: s.portfolio,
-      };
-    }
-  } catch {}
-  return undefined;
+function mapSocialsFromDb(socialsData: Prisma.JsonValue | null | undefined) {
+  const s = parseJsonRecord(socialsData);
+  if (!s) return undefined;
+  return {
+    github: typeof s.github === 'string' ? s.github : undefined,
+    linkedin: typeof s.linkedin === 'string' ? s.linkedin : undefined,
+    portfolio: typeof s.portfolio === 'string' ? s.portfolio : undefined,
+  };
 }
 
-export function mapPortfolioFromDb(user: User & 
-  { 
-  skills: Skill[], 
-  experiences: Experience[], 
-  projects: Project[], 
-  education: Education[], 
-  certifications: Certification[],
-  achievements: Achievement[],
-  languages: Language[],
-  scanReports: ScanReport[],
-  bottomHeadlines?: Array<{ text: string; order: number }>,
-  }): IPortfolio {
-  return {
+export function mapPortfolioFromDb(
+  user: User & {
+    skills: Skill[];
+    experiences: Experience[];
+    projects: Project[];
+    education: Education[];
+    certifications: Certification[];
+    achievements: Achievement[];
+    languages: Language[];
+    scanReports: ScanReport[];
+    bottomHeadlines?: Array<{ text: string; order: number }>;
+    repoData?: {
+      nestJSGitRepo: string | null;
+      nestJSDeployedServer: string | null;
+      nestJSSwaggerUrl: string | null;
+      nextJSGitRepo: string | null;
+      nextJSDeployedServer: string | null;
+      postgresDeployedServer: string | null;
+    } | null;
+  },
+): IPortfolio {
+  const r = user.repoData ?? null;
+  const bottomHeadline =
+    user.bottomHeadlines && user.bottomHeadlines.length
+      ? user.bottomHeadlines.map((b) => b.text)
+      : undefined;
+
+  const result = {
     name: user.name,
     email: user.email,
     headline: user.headline ?? undefined,
@@ -127,16 +190,29 @@ export function mapPortfolioFromDb(user: User &
     copyrights: user.copyrights ?? undefined,
     location: user.location ?? undefined,
     phone: user.phone ?? undefined,
-    socials: mapSocialsFromDb(user.socials),
+    socials: mapSocialsFromDb(
+      user.socials as Prisma.JsonValue | null | undefined,
+    ),
+
+    // repo data merged into root
+    nestJSGitRepo: r?.nestJSGitRepo ?? undefined,
+    nestJSDeployedServer: r?.nestJSDeployedServer ?? undefined,
+    nestJSSwaggerUrl: r?.nestJSSwaggerUrl ?? undefined,
+    nextJSGitRepo: r?.nextJSGitRepo ?? undefined,
+    nextJSDeployedServer: r?.nextJSDeployedServer ?? undefined,
+    postgresDeployedServer: r?.postgresDeployedServer ?? undefined,
+
     skills: user.skills.map(mapSkillFromDb),
-    experiences: user.experiences.map(mapexperienceFromDb),
-    projects: user.projects.map(mapprojectsFromDb),
-    education: user.education.map(mapeducationFromDb),
-    certifications: user.certifications.map(mapCertificationsFromDb),
-    achievements: user.achievements.map(mapAchievementsFromDb),
-    languages: user.languages.map(mapLanguagesFromDb),
+    experiences: user.experiences.map(mapExperienceFromDb),
+    projects: user.projects.map(mapProjectFromDb),
+    education: user.education.map(mapEducationFromDb),
+    certifications: user.certifications.map(mapCertificationFromDb),
+    achievements: user.achievements.map(mapAchievementFromDb),
+    languages: user.languages.map(mapLanguageFromDb),
     scanReports: user.scanReports.map(mapScanReportsFromDb),
-    bottomHeadline: (user.bottomHeadlines || []).sort((a,b)=>a.order-b.order).map(b=>b.text),
+    bottomHeadline,
     toolDocs: getOrderedToolDocs(),
-  };
+  } satisfies IPortfolio;
+
+  return result;
 }

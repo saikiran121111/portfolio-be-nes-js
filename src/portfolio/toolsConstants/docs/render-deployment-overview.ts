@@ -23,7 +23,7 @@ Environment variables (Render → Environment)
 - PORT: provided by Render (no need to set)
 - NODE_ENV: production
 - DATABASE_URL: Neon connection string (pooled), e.g.
-  postgresql://USER:PASSWORD@ep-xxxxx-pooler.neon.tech/DBNAME?sslmode=require&pgbouncer=true
+  postgresql://<user>:<pw>@ep-xxxxx-pooler.neon.tech/<db>?sslmode=require&pgbouncer=true
 - Optional: APP_VERSION (for health), CORS_ORIGINS (comma-separated) if you later customize CORS
 
 Build & start commands (Render Settings)

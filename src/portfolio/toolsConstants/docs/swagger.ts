@@ -115,7 +115,7 @@ Postman/clients
 - API client stubs can be generated with openapi-generator for many languages (typescript-axios, typescript-fetch, java, python)
 
 Notes for Windows/PowerShell
-- When running the PowerShell commands in scripts, npm on Windows uses cmd by default; prefixing with "powershell -NoProfile -Command \"...\"" ensures the PowerShell cmdlets (Test-Path, New-Item, Invoke-WebRequest) are available
+- When running the PowerShell commands in scripts, npm on Windows uses cmd by default; prefixing with "powershell -NoProfile -Command "..."" ensures the PowerShell cmdlets (Test-Path, New-Item, Invoke-WebRequest) are available
 - Alternatively, run the listed commands directly in a PowerShell terminal
 `),
   order: 22,

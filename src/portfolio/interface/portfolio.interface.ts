@@ -1,13 +1,13 @@
-import { 
-    IAchievements,
-    ICertifications,
-    IEducation,
-    IExperience,
-    ILanguages,
-    IProjects,
-    ISkill,
-    IscanReports } from './user.interface';
-
+import {
+  IAchievements,
+  ICertifications,
+  IEducation,
+  IExperience,
+  ILanguages,
+  IProjects,
+  ISkill,
+  IscanReports,
+} from './user.interface';
 
 export interface IPortfolio {
   name: string;
@@ -18,6 +18,12 @@ export interface IPortfolio {
   location?: string;
   phone?: string;
   socials?: ISocials;
+  nestJSGitRepo?: string;
+  nestJSDeployedServer?: string;
+  nestJSSwaggerUrl?: string;
+  nextJSGitRepo?: string;
+  nextJSDeployedServer?: string;
+  postgresDeployedServer?: string;
   skills: ISkill[];
   experiences: IExperience[];
   projects?: IProjects[];
@@ -36,7 +42,6 @@ export interface ISocials {
   portfolio?: string;
 }
 
-// New interface describing tool/docs items
 export interface IToolDoc {
   key: string;
   title: string;
@@ -45,5 +50,3 @@ export interface IToolDoc {
   content: string;
   order?: number;
 }
-
-

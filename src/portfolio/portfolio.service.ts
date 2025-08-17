@@ -5,11 +5,10 @@ import { mapPortfolioFromDb } from './mapper/portfolio.mapper';
 
 @Injectable()
 export class PortfolioService {
+  // This service will handle portfolio-related logic
+  constructor(private prisma: PrismaService) {}
 
-    // This service will handle portfolio-related logic
-    constructor(private prisma: PrismaService) {}
-
-    async getPortfolioV2(): Promise<IPortfolio | null> {
+  async getPortfolioV2(): Promise<IPortfolio | null> {
     const user = await this.prisma.user.findFirst({
       include: {
         skills: true,
@@ -21,11 +20,22 @@ export class PortfolioService {
         languages: true,
         scanReports: true,
         bottomHeadlines: { orderBy: { order: 'asc' } },
+        repoData: {
+          select: {
+            nestJSGitRepo: true,
+            nestJSDeployedServer: true,
+            nestJSSwaggerUrl: true,
+            nextJSGitRepo: true,
+            nextJSDeployedServer: true,
+            postgresDeployedServer: true,
+          },
+        },
       },
     });
     if (!user) {
       return null;
     }
+
     return mapPortfolioFromDb(user);
   }
 
