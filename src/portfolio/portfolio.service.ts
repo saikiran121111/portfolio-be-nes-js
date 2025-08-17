@@ -20,6 +20,7 @@ export class PortfolioService {
         achievements: true,
         languages: true,
         scanReports: true,
+        bottomHeadlines: { orderBy: { order: 'asc' } },
       },
     });
     if (!user) {
@@ -39,6 +40,7 @@ export class PortfolioService {
         achievements: true,
         languages: true,
         scanReports: true,
+        bottomHeadlines: { orderBy: { order: 'asc' } },
       },
     });
   }

@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { SkillDto, ExperienceDto, ProjectDto, EducationDto, CertificationDto, AchievementDto, LanguageDto, ScanReportDto, SocialsDto } from './user.response.dto';
+import { SkillDto, ExperienceDto, ProjectDto, EducationDto, CertificationDto, AchievementDto, LanguageDto, ScanReportDto, SocialsDto, ToolDocDto } from './user.response.dto';
 
 export class PortfolioResponseDto {
   @ApiProperty()
@@ -13,6 +13,9 @@ export class PortfolioResponseDto {
 
   @ApiPropertyOptional()
   summary?: string;
+
+  @ApiPropertyOptional()
+  copyrights?: string;
 
   @ApiPropertyOptional()
   location?: string;
@@ -46,6 +49,12 @@ export class PortfolioResponseDto {
 
   @ApiPropertyOptional({ type: () => [ScanReportDto] })
   scanReports?: ScanReportDto[];
+
+  @ApiPropertyOptional({ type: () => [String] })
+  bottomHeadline?: string[];
+
+  @ApiPropertyOptional({ type: () => [ToolDocDto] })
+  toolDocs?: ToolDocDto[];
 }
 
 export function toPortfolioResponseDto(raw: any): PortfolioResponseDto {

@@ -1,6 +1,7 @@
 import { User, Skill, Experience, Project, Education, Certification, Achievement, Language, ScanReport } from '@prisma/client';
 import { IAchievements, ICertifications, IEducation, IExperience, ILanguages, IProjects, IscanReports, ISkill, ISummary } from '../interface/user.interface';
 import { IPortfolio } from '../interface/portfolio.interface';
+import { getOrderedToolDocs } from '../toolsConstants/constants';
 
 function mapSkillFromDb(skill: Skill): ISkill {
   return {
@@ -116,12 +117,14 @@ export function mapPortfolioFromDb(user: User &
   achievements: Achievement[],
   languages: Language[],
   scanReports: ScanReport[],
+  bottomHeadlines?: Array<{ text: string; order: number }>,
   }): IPortfolio {
   return {
     name: user.name,
     email: user.email,
     headline: user.headline ?? undefined,
     summary: user.summary ?? undefined,
+    copyrights: user.copyrights ?? undefined,
     location: user.location ?? undefined,
     phone: user.phone ?? undefined,
     socials: mapSocialsFromDb(user.socials),
@@ -133,5 +136,7 @@ export function mapPortfolioFromDb(user: User &
     achievements: user.achievements.map(mapAchievementsFromDb),
     languages: user.languages.map(mapLanguagesFromDb),
     scanReports: user.scanReports.map(mapScanReportsFromDb),
+    bottomHeadline: (user.bottomHeadlines || []).sort((a,b)=>a.order-b.order).map(b=>b.text),
+    toolDocs: getOrderedToolDocs(),
   };
 }
