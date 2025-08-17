@@ -14,12 +14,12 @@ What is Neon
 
 Recommended connection (for Render)
 - Use the pooled endpoint (…-pooler.neon.tech) to limit connections:
-  postgresql://USER:PASSWORD@ep-xxxxx-pooler.neon.tech/DBNAME?sslmode=require&pgbouncer=true
+  postgresql://<user>:<password>@ep-xxxxx-pooler.neon.tech/<db>?sslmode=require&pgbouncer=true
 
 Environment variable
 - DATABASE_URL in Render (production) and locally in env/local/.env.prisma
 - Example:
-  DATABASE_URL="postgresql://myuser:mypass@ep-abc123-pooler.neon.tech/mydb?sslmode=require&pgbouncer=true"
+  DATABASE_URL="postgresql://<user>:<password>@ep-abc123-pooler.neon.tech/<db>?sslmode=require&pgbouncer=true"
 
 TLS/SSL
 - Neon requires SSL (sslmode=require). Keep it in the URL.

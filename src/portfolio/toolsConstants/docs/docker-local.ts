@@ -28,22 +28,22 @@ Services
 
 Environment files
 - env/local/.env.docker
-  - POSTGRES_USER=postgres
-  - POSTGRES_PASSWORD=postgres
-  - POSTGRES_DB=portfolio_dev
-  - PGADMIN_DEFAULT_EMAIL=...
-  - PGADMIN_DEFAULT_PASSWORD=...
+  - POSTGRES_USER=<your_user>
+  - POSTGRES_PASSWORD=<your_password>
+  - POSTGRES_DB=<your_db>
+  - PGADMIN_DEFAULT_EMAIL=<your_email>
+  - PGADMIN_DEFAULT_PASSWORD=<your_pgadmin_password>
   - POSTGRES_PORT=5432
   - PGADMIN_PORT=8080
 - env/local/.env.prisma
-  - DATABASE_URL="postgresql://postgres:postgres@localhost:5432/portfolio_dev?schema=public"
+  - DATABASE_URL="postgresql://<user>:<password>@localhost:5432/<db>?schema=public"
 
 Project scripts (local)
 - docker:up / docker:down / docker:logs / docker:ps → compose with env/local/.env.docker.
 - prisma:generate:local / prisma:migrate:local / prisma:studio:local → use env/local/.env.prisma.
 
 Connection info
-- PostgreSQL: localhost:${'${'}POSTGRES_PORT or 5432}, DB=portfolio_dev, user=postgres, password=postgres.
+- PostgreSQL: localhost:${'${'}POSTGRES_PORT or 5432}, DB=<db>, user=<user>, password=<password>.
 - Prisma: uses DATABASE_URL from env/local/.env.prisma.
 - pgAdmin: http://localhost:${'${'}PGADMIN_PORT or 8080} (login with env creds).
 
