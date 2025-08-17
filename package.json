@@ -28,6 +28,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
+    "setup-hooks": "git config core.hooksPath .githooks && echo \"✅ Git hooks configured successfully!\"",
+    "verify-setup": "npm test && npm run lint && npm run test:cov",
     "docker:up": "docker compose --env-file env/local/.env.docker up -d",
     "docker:down": "docker compose --env-file env/local/.env.docker down",
     "docker:logs": "docker compose --env-file env/local/.env.docker logs -f",

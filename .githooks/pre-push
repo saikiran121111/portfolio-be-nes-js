@@ -1,0 +1,3 @@
+#!/bin/sh 
+# Wrapper script to call PowerShell version on Windows 
+powershell.exe -ExecutionPolicy Bypass -File .githooks/pre-push.ps1 
