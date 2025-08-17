@@ -1,13 +1,13 @@
-import { 
-    IAchievements,
-    ICertifications,
-    IEducation,
-    IExperience,
-    ILanguages,
-    IProjects,
-    ISkill,
-    IscanReports } from './user.interface';
-
+import {
+  IAchievements,
+  ICertifications,
+  IEducation,
+  IExperience,
+  ILanguages,
+  IProjects,
+  ISkill,
+  IscanReports,
+} from './user.interface';
 
 export interface IPortfolio {
   name: string;
@@ -50,5 +50,3 @@ export interface IToolDoc {
   content: string;
   order?: number;
 }
-
-

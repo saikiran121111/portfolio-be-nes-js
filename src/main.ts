@@ -1,21 +1,21 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { VersioningType } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule, OpenAPIObject } from '@nestjs/swagger';
+import { VersioningType, INestApplication } from '@nestjs/common';
 import { HEADER_VERSION } from './constants/headerVersion';
 import { defaultVersionHeaderMiddleware } from './middleware/defaultVersionHeader.middleware';
 
-function setupSwagger(app) {
+function setupSwagger(app: INestApplication): void {
   const config = new DocumentBuilder()
     .setTitle('Portfolio API')
     .setDescription('API documentation for Portfolio project')
     .setVersion('1.0')
     .build();
-  const document = SwaggerModule.createDocument(app, config);
+  const document: OpenAPIObject = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
 }
 
-function headerVersioning(app) {
+function headerVersioning(app: INestApplication): void {
   app.enableVersioning({
     type: VersioningType.HEADER,
     header: 'Version',
@@ -23,7 +23,7 @@ function headerVersioning(app) {
   });
 }
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, { cors: true });
 
   app.use(defaultVersionHeaderMiddleware);
@@ -32,7 +32,8 @@ async function bootstrap() {
 
   const port = parseInt(process.env.PORT ?? '3002', 10);
   await app.listen(port, '0.0.0.0');
-  // eslint-disable-next-line no-console
+
   console.log(`Server listening on 0.0.0.0:${port}`);
 }
-bootstrap();
+
+void bootstrap();

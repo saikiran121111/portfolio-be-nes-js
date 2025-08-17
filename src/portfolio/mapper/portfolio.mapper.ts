@@ -1,22 +1,55 @@
-import { Prisma, User, Skill, Experience, Project, Education, Certification, Achievement, Language, ScanReport } from '@prisma/client';
-import { IAchievements, ICertifications, IEducation, IExperience, ILanguages, IProjects, IscanReports, ISkill, ISummary } from '../interface/user.interface';
+import {
+  Prisma,
+  User,
+  Skill,
+  Experience,
+  Project,
+  Education,
+  Certification,
+  Achievement,
+  Language,
+  ScanReport,
+} from '@prisma/client';
+import {
+  IAchievements,
+  ICertifications,
+  IEducation,
+  IExperience,
+  ILanguages,
+  IProjects,
+  IscanReports,
+  ISkill,
+  ISummary,
+} from '../interface/user.interface';
 import { IPortfolio } from '../interface/portfolio.interface';
 import { getOrderedToolDocs } from '../toolsConstants/constants';
 
 // Lightweight helpers
 const asRecord = (v: unknown): Record<string, unknown> | undefined =>
-  v && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, unknown>) : undefined;
+  v && typeof v === 'object' && !Array.isArray(v)
+    ? (v as Record<string, unknown>)
+    : undefined;
 
-const parseJsonRecord = (v: Prisma.JsonValue | null | undefined): Record<string, unknown> | undefined => {
+const parseJsonRecord = (
+  v: Prisma.JsonValue | null | undefined,
+): Record<string, unknown> | undefined => {
   if (!v) return undefined;
   if (typeof v === 'string') {
-    try { return asRecord(JSON.parse(v)); } catch { return undefined; }
+    try {
+      return asRecord(JSON.parse(v));
+    } catch {
+      return undefined;
+    }
   }
   return asRecord(v);
 };
 
 function mapSkillFromDb(skill: Skill): ISkill {
-  return { name: skill.name, category: skill.category, level: skill.level || 'beginner' };
+  return {
+    name: skill.name,
+    category: skill.category,
+    level: skill.level || 'beginner',
+  };
 }
 
 function mapExperienceFromDb(experience: Experience): IExperience {
@@ -57,11 +90,20 @@ function mapEducationFromDb(education: Education): IEducation {
 }
 
 function mapCertificationFromDb(certification: Certification): ICertifications {
-  return { title: certification.title, issuer: certification.issuer, date: certification.date, link: certification.link || null };
+  return {
+    title: certification.title,
+    issuer: certification.issuer,
+    date: certification.date,
+    link: certification.link || null,
+  };
 }
 
 function mapAchievementFromDb(achievement: Achievement): IAchievements {
-  return { title: achievement.title, date: achievement.date, link: achievement.link || null };
+  return {
+    title: achievement.title,
+    date: achievement.date,
+    link: achievement.link || null,
+  };
 }
 
 function mapLanguageFromDb(language: Language): ILanguages {
@@ -73,11 +115,21 @@ const toSummary = (v: Prisma.JsonValue | null | undefined): ISummary | null => {
   const rec = parseJsonRecord(v);
   if (!rec) return null;
   const out: ISummary = {};
-  const n = (k: keyof ISummary) => {
-    const val = rec[k as string];
-    if (typeof val === 'number') (out as any)[k] = val;
-  };
-  n('bugs'); n('codeSmells'); n('coverage'); n('low'); n('medium'); n('high'); n('vulnerabilities');
+  const numericKeys: Array<keyof ISummary> = [
+    'bugs',
+    'codeSmells',
+    'coverage',
+    'low',
+    'medium',
+    'high',
+    'vulnerabilities',
+  ];
+  for (const key of numericKeys) {
+    const val = rec[key as string];
+    if (typeof val === 'number') {
+      out[key] = val as never; // safe: narrowing above ensures number
+    }
+  }
   const qg = rec['qualityGate'];
   if (typeof qg === 'string') out.qualityGate = qg;
   return out;
@@ -89,7 +141,7 @@ function mapScanReportsFromDb(scanReport: ScanReport): IscanReports {
     commitSha: scanReport.commitSha,
     runAt: scanReport.runAt,
     artifactUrl: scanReport.artifactUrl,
-    summary: toSummary(scanReport.summary as Prisma.JsonValue | null),
+    summary: toSummary(scanReport.summary),
   };
 }
 
@@ -103,29 +155,32 @@ function mapSocialsFromDb(socialsData: Prisma.JsonValue | null | undefined) {
   };
 }
 
-export function mapPortfolioFromDb(user: User & {
-  skills: Skill[];
-  experiences: Experience[];
-  projects: Project[];
-  education: Education[];
-  certifications: Certification[];
-  achievements: Achievement[];
-  languages: Language[];
-  scanReports: ScanReport[];
-  bottomHeadlines?: Array<{ text: string; order: number }>;
-  repoData?: {
-    nestJSGitRepo: string | null;
-    nestJSDeployedServer: string | null;
-    nestJSSwaggerUrl: string | null;
-    nextJSGitRepo: string | null;
-    nextJSDeployedServer: string | null;
-    postgresDeployedServer: string | null;
-  } | null;
-}): IPortfolio {
+export function mapPortfolioFromDb(
+  user: User & {
+    skills: Skill[];
+    experiences: Experience[];
+    projects: Project[];
+    education: Education[];
+    certifications: Certification[];
+    achievements: Achievement[];
+    languages: Language[];
+    scanReports: ScanReport[];
+    bottomHeadlines?: Array<{ text: string; order: number }>;
+    repoData?: {
+      nestJSGitRepo: string | null;
+      nestJSDeployedServer: string | null;
+      nestJSSwaggerUrl: string | null;
+      nextJSGitRepo: string | null;
+      nextJSDeployedServer: string | null;
+      postgresDeployedServer: string | null;
+    } | null;
+  },
+): IPortfolio {
   const r = user.repoData ?? null;
-  const bottomHeadline = user.bottomHeadlines && user.bottomHeadlines.length
-    ? user.bottomHeadlines.map(b => b.text)
-    : undefined;
+  const bottomHeadline =
+    user.bottomHeadlines && user.bottomHeadlines.length
+      ? user.bottomHeadlines.map((b) => b.text)
+      : undefined;
 
   const result = {
     name: user.name,
@@ -135,7 +190,9 @@ export function mapPortfolioFromDb(user: User & {
     copyrights: user.copyrights ?? undefined,
     location: user.location ?? undefined,
     phone: user.phone ?? undefined,
-    socials: mapSocialsFromDb(user.socials as Prisma.JsonValue | null | undefined),
+    socials: mapSocialsFromDb(
+      user.socials as Prisma.JsonValue | null | undefined,
+    ),
 
     // repo data merged into root
     nestJSGitRepo: r?.nestJSGitRepo ?? undefined,
