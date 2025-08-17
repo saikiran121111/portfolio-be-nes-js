@@ -82,7 +82,7 @@ describe('PortfolioService', () => {
   describe('getPortfolioV2', () => {
     it('should return mapped portfolio when user exists', async () => {
       mockPrismaService.user.findFirst.mockResolvedValue(mockUser);
-      mockMapPortfolioFromDb.mockReturnValue(mockMappedPortfolio as any);
+      mockMapPortfolioFromDb.mockReturnValue(mockMappedPortfolio);
 
       const result = await service.getPortfolioV2();
 
@@ -154,15 +154,16 @@ describe('PortfolioService', () => {
 
   describe('getPortfolioV1', () => {
     it('should return raw user data with includes', async () => {
-      const mockUserV1 = { ...mockUser };
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      delete (mockUserV1 as any).repoData; // V1 doesn't include repoData
+      // Create a version without repoData for V1 API
+      const userV1Data = Object.fromEntries(
+        Object.entries(mockUser).filter(([key]) => key !== 'repoData'),
+      );
 
-      mockPrismaService.user.findFirst.mockResolvedValue(mockUserV1);
+      mockPrismaService.user.findFirst.mockResolvedValue(userV1Data);
 
       const result = await service.getPortfolioV1();
 
-      expect(result).toBe(mockUserV1);
+      expect(result).toBe(userV1Data);
       expect(mockPrismaService.user.findFirst).toHaveBeenCalledWith({
         include: {
           skills: true,

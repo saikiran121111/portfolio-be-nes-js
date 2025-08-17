@@ -27,41 +27,46 @@ describe('Portfolio Mapper', () => {
   });
 
   describe('mapPortfolioFromDb', () => {
-    const createMockUser = (overrides = {}) => ({
-      id: 1,
-      name: 'John Doe',
-      email: 'john@example.com',
-      role: 'admin',
-      password: 'hashed',
-      avatarUrl: null,
-      headline: 'Software Developer',
-      summary: 'Experienced developer',
-      copyrights: '© 2023 John Doe',
-      location: 'New York',
-      phone: '+1234567890',
-      socials: {
-        github: 'johndoe',
-        linkedin: 'johndoe',
-        portfolio: 'https://johndoe.com',
-      },
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      skills: [],
-      experiences: [],
-      projects: [],
-      education: [],
-      certifications: [],
-      achievements: [],
-      languages: [],
-      scanReports: [],
-      bottomHeadlines: [],
-      repoData: null,
-      ...overrides,
-    });
+    // Type alias for cleaner test code
+    type UserInput = Parameters<typeof mapPortfolioFromDb>[0];
+
+    // Create a simplified mock type that includes the essential fields
+    const createMockUser = (overrides = {}): UserInput =>
+      ({
+        id: 1,
+        name: 'John Doe',
+        email: 'john@example.com',
+        role: 'admin',
+        password: 'hashed',
+        avatarUrl: null,
+        headline: 'Software Developer',
+        summary: 'Experienced developer',
+        copyrights: '© 2023 John Doe',
+        location: 'New York',
+        phone: '+1234567890',
+        socials: {
+          github: 'johndoe',
+          linkedin: 'johndoe',
+          portfolio: 'https://johndoe.com',
+        },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        skills: [],
+        experiences: [],
+        projects: [],
+        education: [],
+        certifications: [],
+        achievements: [],
+        languages: [],
+        scanReports: [],
+        bottomHeadlines: [],
+        repoData: null,
+        ...overrides,
+      }) as UserInput;
 
     it('should map basic user data correctly', () => {
       const mockUser = createMockUser();
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
 
       expect(result.name).toBe('John Doe');
       expect(result.email).toBe('john@example.com');
@@ -83,7 +88,7 @@ describe('Portfolio Mapper', () => {
         socials: null,
       });
 
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
 
       expect(result.headline).toBeUndefined();
       expect(result.summary).toBeUndefined();
@@ -102,7 +107,7 @@ describe('Portfolio Mapper', () => {
         },
       });
 
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
 
       expect(result.socials).toEqual({
         github: 'johndoe',
@@ -116,7 +121,7 @@ describe('Portfolio Mapper', () => {
         socials: 'invalid-json',
       });
 
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
       expect(result.socials).toBeUndefined();
     });
 
@@ -125,7 +130,7 @@ describe('Portfolio Mapper', () => {
         socials: '{invalid-json',
       });
 
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
       expect(result.socials).toBeUndefined();
     });
 
@@ -134,7 +139,7 @@ describe('Portfolio Mapper', () => {
         socials: {},
       });
 
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
       expect(result.socials).toEqual({
         github: undefined,
         linkedin: undefined,
@@ -147,7 +152,7 @@ describe('Portfolio Mapper', () => {
         socials: ['invalid', 'array'],
       });
 
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
       expect(result.socials).toBeUndefined();
     });
 
@@ -163,7 +168,7 @@ describe('Portfolio Mapper', () => {
         },
       });
 
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
 
       expect(result.nestJSGitRepo).toBe(
         'https://github.com/johndoe/nestjs-api',
@@ -182,7 +187,7 @@ describe('Portfolio Mapper', () => {
         repoData: null,
       });
 
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
 
       expect(result.nestJSGitRepo).toBeUndefined();
       expect(result.nestJSDeployedServer).toBeUndefined();
@@ -200,7 +205,7 @@ describe('Portfolio Mapper', () => {
         ],
       });
 
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
       expect(result.bottomHeadline).toEqual([
         'First headline',
         'Second headline',
@@ -212,13 +217,13 @@ describe('Portfolio Mapper', () => {
         bottomHeadlines: [],
       });
 
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
       expect(result.bottomHeadline).toBeUndefined();
     });
 
     it('should map empty arrays correctly', () => {
       const mockUser = createMockUser();
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
 
       expect(result.skills).toEqual([]);
       expect(result.experiences).toEqual([]);
@@ -232,13 +237,13 @@ describe('Portfolio Mapper', () => {
 
     it('should call getOrderedToolDocs', () => {
       const mockUser = createMockUser();
-      mapPortfolioFromDb(mockUser as any);
+      mapPortfolioFromDb(mockUser);
       expect(getOrderedToolDocs).toHaveBeenCalledTimes(1);
     });
 
     it('should include toolDocs in result', () => {
       const mockUser = createMockUser();
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
       expect(result.toolDocs).toBe(mockToolDocs);
     });
 
@@ -252,18 +257,20 @@ describe('Portfolio Mapper', () => {
             category: 'Programming',
             level: 'advanced',
             userId: 1,
+            order: 1,
           },
           {
             id: 2,
             name: 'Python',
             category: 'Programming',
-            level: null, // Test default level
+            level: 'beginner', // Test default level mapping
             userId: 1,
+            order: 2,
           },
         ],
       });
 
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
       expect(result.skills).toEqual([
         {
           name: 'JavaScript',
@@ -308,7 +315,7 @@ describe('Portfolio Mapper', () => {
         ],
       });
 
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
       expect(result.experiences).toEqual([
         {
           title: 'Senior Developer',
@@ -363,7 +370,7 @@ describe('Portfolio Mapper', () => {
         ],
       });
 
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
       expect(result.projects).toEqual([
         {
           title: 'Portfolio Website',
@@ -414,7 +421,7 @@ describe('Portfolio Mapper', () => {
         ],
       });
 
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
       expect(result.education).toEqual([
         {
           institution: 'University of Tech',
@@ -457,7 +464,7 @@ describe('Portfolio Mapper', () => {
         ],
       });
 
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
       expect(result.certifications).toEqual([
         {
           title: 'AWS Certified',
@@ -494,7 +501,7 @@ describe('Portfolio Mapper', () => {
         ],
       });
 
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
       expect(result.achievements).toEqual([
         {
           title: 'Best Developer Award',
@@ -527,7 +534,7 @@ describe('Portfolio Mapper', () => {
         ],
       });
 
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
       expect(result.languages).toEqual([
         {
           name: 'English',
@@ -587,7 +594,7 @@ describe('Portfolio Mapper', () => {
         ],
       });
 
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
       expect(result.scanReports).toEqual([
         {
           type: 'sonarqube',
@@ -640,7 +647,7 @@ describe('Portfolio Mapper', () => {
         ],
       });
 
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
       expect(result.scanReports).toBeDefined();
       expect(result.scanReports!).toHaveLength(1);
       expect(result.scanReports![0].summary).toBeNull();
@@ -661,7 +668,7 @@ describe('Portfolio Mapper', () => {
         ],
       });
 
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
       expect(result.scanReports).toBeDefined();
       expect(result.scanReports!).toHaveLength(1);
       expect(result.scanReports![0].summary).toBeNull();
@@ -682,7 +689,7 @@ describe('Portfolio Mapper', () => {
         ],
       });
 
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
       expect(result.scanReports).toBeDefined();
       expect(result.scanReports!).toHaveLength(1);
       expect(result.scanReports![0].summary).toEqual({
@@ -706,7 +713,7 @@ describe('Portfolio Mapper', () => {
         ],
       });
 
-      const result = mapPortfolioFromDb(mockUser as any);
+      const result = mapPortfolioFromDb(mockUser);
       expect(result.scanReports).toBeDefined();
       expect(result.scanReports!).toHaveLength(1);
       expect(result.scanReports![0].summary).toBeNull();
