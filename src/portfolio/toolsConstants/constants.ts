@@ -1,7 +1,5 @@
-// Aggregates ToolDoc items from individual files under ./docs
 import type { ToolDoc } from './types';
 
-// Import each ToolDoc constant
 import { apiOpenapiTools } from './docs/api-openapi-tools';
 import { backendSummary } from './docs/backend-summary';
 import { codeDocsTools } from './docs/code-docs-tools';

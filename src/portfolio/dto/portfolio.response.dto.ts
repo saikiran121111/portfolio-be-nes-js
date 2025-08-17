@@ -53,7 +53,6 @@ export class PortfolioResponseDto {
   @ApiPropertyOptional({ type: () => [String] })
   bottomHeadline?: string[];
 
-  // New: tool/docs items for frontend collapsible pointers
   @ApiPropertyOptional({ type: () => [ToolDocDto] })
   toolDocs?: ToolDocDto[];
 }

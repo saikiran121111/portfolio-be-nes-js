@@ -27,7 +27,6 @@ export interface IPortfolio {
   languages?: ILanguages[];
   scanReports?: IscanReports[];
   bottomHeadline?: string[];
-  // Added: tool docs (moved from .txt files)
   toolDocs?: IToolDoc[];
 }
 
