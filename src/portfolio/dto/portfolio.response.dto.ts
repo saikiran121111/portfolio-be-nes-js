@@ -1,5 +1,17 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { SkillDto, ExperienceDto, ProjectDto, EducationDto, CertificationDto, AchievementDto, LanguageDto, ScanReportDto, SocialsDto } from './user.response.dto';
+import {
+  SkillDto,
+  ExperienceDto,
+  ProjectDto,
+  EducationDto,
+  CertificationDto,
+  AchievementDto,
+  LanguageDto,
+  ScanReportDto,
+  SocialsDto,
+  ToolDocDto,
+} from './user.response.dto';
+import { IPortfolio } from '../interface/portfolio.interface';
 
 export class PortfolioResponseDto {
   @ApiProperty()
@@ -15,6 +27,9 @@ export class PortfolioResponseDto {
   summary?: string;
 
   @ApiPropertyOptional()
+  copyrights?: string;
+
+  @ApiPropertyOptional()
   location?: string;
 
   @ApiPropertyOptional()
@@ -22,6 +37,20 @@ export class PortfolioResponseDto {
 
   @ApiPropertyOptional({ type: () => SocialsDto })
   socials?: SocialsDto;
+
+  // Repo data fields
+  @ApiPropertyOptional()
+  nestJSGitRepo?: string;
+  @ApiPropertyOptional()
+  nestJSDeployedServer?: string;
+  @ApiPropertyOptional()
+  nestJSSwaggerUrl?: string;
+  @ApiPropertyOptional()
+  nextJSGitRepo?: string;
+  @ApiPropertyOptional()
+  nextJSDeployedServer?: string;
+  @ApiPropertyOptional()
+  postgresDeployedServer?: string;
 
   @ApiProperty({ type: () => [SkillDto] })
   skills!: SkillDto[];
@@ -46,9 +75,15 @@ export class PortfolioResponseDto {
 
   @ApiPropertyOptional({ type: () => [ScanReportDto] })
   scanReports?: ScanReportDto[];
+
+  @ApiPropertyOptional({ type: () => [String] })
+  bottomHeadline?: string[];
+
+  @ApiPropertyOptional({ type: () => [ToolDocDto] })
+  toolDocs?: ToolDocDto[];
 }
 
-export function toPortfolioResponseDto(raw: any): PortfolioResponseDto {
+export function toPortfolioResponseDto(raw: IPortfolio): PortfolioResponseDto {
   // Shallow assign is sufficient because nested shapes match already
   return Object.assign(new PortfolioResponseDto(), raw);
 }

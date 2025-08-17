@@ -15,7 +15,7 @@ export interface IExperience {
   techStack: string[];
 }
 
-export interface IProjects{
+export interface IProjects {
   title: string;
   description: string;
   repoUrl: string | null;
@@ -61,7 +61,7 @@ export interface IscanReports {
   summary: ISummary | null;
 }
 
-export interface ISummary{
+export interface ISummary {
   bugs?: number;
   codeSmells?: number;
   qualityGate?: string;
