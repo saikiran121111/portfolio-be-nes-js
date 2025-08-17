@@ -31,7 +31,7 @@ describe('PortfolioModule', () => {
   it('should properly wire dependencies', () => {
     const controller = module.get<PortfolioController>(PortfolioController);
     const service = module.get<PortfolioService>(PortfolioService);
-    
+
     expect(controller).toBeDefined();
     expect(service).toBeDefined();
   });

@@ -9,11 +9,12 @@ jest.mock('../../src/portfolio/mapper/portfolio.mapper', () => ({
   mapPortfolioFromDb: jest.fn(),
 }));
 
-const mockMapPortfolioFromDb = mapPortfolioFromDb as jest.MockedFunction<typeof mapPortfolioFromDb>;
+const mockMapPortfolioFromDb = mapPortfolioFromDb as jest.MockedFunction<
+  typeof mapPortfolioFromDb
+>;
 
 describe('PortfolioService', () => {
   let service: PortfolioService;
-  let prismaService: PrismaService;
 
   const mockUser = {
     id: 1,
@@ -72,7 +73,6 @@ describe('PortfolioService', () => {
     }).compile();
 
     service = module.get<PortfolioService>(PortfolioService);
-    prismaService = module.get<PrismaService>(PrismaService);
   });
 
   it('should be defined', () => {
@@ -155,8 +155,9 @@ describe('PortfolioService', () => {
   describe('getPortfolioV1', () => {
     it('should return raw user data with includes', async () => {
       const mockUserV1 = { ...mockUser };
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       delete (mockUserV1 as any).repoData; // V1 doesn't include repoData
-      
+
       mockPrismaService.user.findFirst.mockResolvedValue(mockUserV1);
 
       const result = await service.getPortfolioV1();

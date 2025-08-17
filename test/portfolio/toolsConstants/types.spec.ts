@@ -103,7 +103,9 @@ describe('ToolsConstants Types', () => {
         This is a test
         with multiple lines
       `);
-      expect(input).toBe('        This is a test\n        with multiple lines\n      ');
+      expect(input).toBe(
+        '        This is a test\n        with multiple lines\n      ',
+      );
     });
   });
 });

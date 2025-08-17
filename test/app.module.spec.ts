@@ -34,7 +34,8 @@ describe('AppModule', () => {
   it('should import PortfolioModule', () => {
     expect(module).toBeDefined();
     // Module imports are not directly testable, but we can test that portfolio components are available
-    const portfolioController = module.get<PortfolioController>(PortfolioController);
+    const portfolioController =
+      module.get<PortfolioController>(PortfolioController);
     expect(portfolioController).toBeDefined();
   });
 

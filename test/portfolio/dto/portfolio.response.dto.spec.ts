@@ -1,4 +1,7 @@
-import { PortfolioResponseDto, toPortfolioResponseDto } from '../../../src/portfolio/dto/portfolio.response.dto';
+import {
+  PortfolioResponseDto,
+  toPortfolioResponseDto,
+} from '../../../src/portfolio/dto/portfolio.response.dto';
 import { IPortfolio } from '../../../src/portfolio/interface/portfolio.interface';
 
 describe('PortfolioResponseDto', () => {
@@ -110,11 +113,17 @@ describe('PortfolioResponseDto', () => {
       const result = toPortfolioResponseDto(mockPortfolio);
 
       expect(result.nestJSGitRepo).toBe(mockPortfolio.nestJSGitRepo);
-      expect(result.nestJSDeployedServer).toBe(mockPortfolio.nestJSDeployedServer);
+      expect(result.nestJSDeployedServer).toBe(
+        mockPortfolio.nestJSDeployedServer,
+      );
       expect(result.nestJSSwaggerUrl).toBe(mockPortfolio.nestJSSwaggerUrl);
       expect(result.nextJSGitRepo).toBe(mockPortfolio.nextJSGitRepo);
-      expect(result.nextJSDeployedServer).toBe(mockPortfolio.nextJSDeployedServer);
-      expect(result.postgresDeployedServer).toBe(mockPortfolio.postgresDeployedServer);
+      expect(result.nextJSDeployedServer).toBe(
+        mockPortfolio.nextJSDeployedServer,
+      );
+      expect(result.postgresDeployedServer).toBe(
+        mockPortfolio.postgresDeployedServer,
+      );
       expect(result.skills).toBe(mockPortfolio.skills);
       expect(result.experiences).toBe(mockPortfolio.experiences);
       expect(result.projects).toBe(mockPortfolio.projects);

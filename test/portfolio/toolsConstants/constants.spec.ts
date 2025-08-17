@@ -1,5 +1,7 @@
-import { TOOL_DOCS, getOrderedToolDocs } from '../../../src/portfolio/toolsConstants/constants';
-import { ToolDoc } from '../../../src/portfolio/toolsConstants/types';
+import {
+  TOOL_DOCS,
+  getOrderedToolDocs,
+} from '../../../src/portfolio/toolsConstants/constants';
 
 describe('ToolsConstants', () => {
   describe('TOOL_DOCS', () => {
@@ -87,7 +89,7 @@ describe('ToolsConstants', () => {
 
     it('should sort by order property', () => {
       const result = getOrderedToolDocs();
-      
+
       for (let i = 0; i < result.length - 1; i++) {
         const currentOrder = result[i].order ?? 0;
         const nextOrder = result[i + 1].order ?? 0;
@@ -104,9 +106,9 @@ describe('ToolsConstants', () => {
     it('should not modify the original array', () => {
       const originalLength = TOOL_DOCS.length;
       const originalFirst = TOOL_DOCS[0];
-      
+
       getOrderedToolDocs();
-      
+
       expect(TOOL_DOCS.length).toBe(originalLength);
       expect(TOOL_DOCS[0]).toBe(originalFirst);
     });
@@ -114,14 +116,14 @@ describe('ToolsConstants', () => {
     it('should return a new array instance', () => {
       const result1 = getOrderedToolDocs();
       const result2 = getOrderedToolDocs();
-      
+
       expect(result1).not.toBe(result2);
       expect(result1).toEqual(result2);
     });
 
     it('should contain valid ToolDoc objects', () => {
       const result = getOrderedToolDocs();
-      
+
       result.forEach((doc) => {
         expect(doc).toHaveProperty('key');
         expect(doc).toHaveProperty('title');

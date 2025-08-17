@@ -31,7 +31,7 @@ describe('HealthModule', () => {
   it('should properly wire dependencies', () => {
     const controller = module.get<HealthController>(HealthController);
     const service = module.get<HealthService>(HealthService);
-    
+
     expect(controller).toBeDefined();
     expect(service).toBeDefined();
   });

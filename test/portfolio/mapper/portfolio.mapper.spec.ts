@@ -6,7 +6,9 @@ jest.mock('../../../src/portfolio/toolsConstants/constants', () => ({
   getOrderedToolDocs: jest.fn(),
 }));
 
-const mockGetOrderedToolDocs = getOrderedToolDocs as jest.MockedFunction<typeof getOrderedToolDocs>;
+const mockGetOrderedToolDocs = getOrderedToolDocs as jest.MockedFunction<
+  typeof getOrderedToolDocs
+>;
 
 describe('Portfolio Mapper', () => {
   const mockToolDocs = [
@@ -163,10 +165,14 @@ describe('Portfolio Mapper', () => {
 
       const result = mapPortfolioFromDb(mockUser as any);
 
-      expect(result.nestJSGitRepo).toBe('https://github.com/johndoe/nestjs-api');
+      expect(result.nestJSGitRepo).toBe(
+        'https://github.com/johndoe/nestjs-api',
+      );
       expect(result.nestJSDeployedServer).toBe('https://api.johndoe.com');
       expect(result.nestJSSwaggerUrl).toBe('https://api.johndoe.com/swagger');
-      expect(result.nextJSGitRepo).toBe('https://github.com/johndoe/nextjs-frontend');
+      expect(result.nextJSGitRepo).toBe(
+        'https://github.com/johndoe/nextjs-frontend',
+      );
       expect(result.nextJSDeployedServer).toBe('https://johndoe.com');
       expect(result.postgresDeployedServer).toBe('https://db.johndoe.com');
     });
@@ -195,7 +201,10 @@ describe('Portfolio Mapper', () => {
       });
 
       const result = mapPortfolioFromDb(mockUser as any);
-      expect(result.bottomHeadline).toEqual(['First headline', 'Second headline']);
+      expect(result.bottomHeadline).toEqual([
+        'First headline',
+        'Second headline',
+      ]);
     });
 
     it('should handle empty bottom headlines', () => {

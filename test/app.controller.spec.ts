@@ -4,7 +4,6 @@ import { AppService } from '../src/app.service';
 
 describe('AppController', () => {
   let controller: AppController;
-  let appService: AppService;
 
   const mockAppService = {
     getHello: jest.fn(),
@@ -22,7 +21,6 @@ describe('AppController', () => {
     }).compile();
 
     controller = module.get<AppController>(AppController);
-    appService = module.get<AppService>(AppService);
   });
 
   it('should be defined', () => {
@@ -37,7 +35,7 @@ describe('AppController', () => {
       const result = controller.getHello();
 
       expect(result).toBe(expectedResult);
-      expect(appService.getHello).toHaveBeenCalledTimes(1);
+      expect(mockAppService.getHello).toHaveBeenCalledTimes(1);
     });
 
     it('should call appService.getHello', () => {
@@ -46,7 +44,7 @@ describe('AppController', () => {
 
       controller.getHello();
 
-      expect(appService.getHello).toHaveBeenCalledTimes(1);
+      expect(mockAppService.getHello).toHaveBeenCalledTimes(1);
     });
 
     it('should return what appService returns', () => {

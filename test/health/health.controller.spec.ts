@@ -4,7 +4,6 @@ import { HealthService } from '../../src/health/health.service';
 
 describe('HealthController', () => {
   let controller: HealthController;
-  let healthService: HealthService;
 
   const mockHealthService = {
     getHealthStatus: jest.fn(),
@@ -22,7 +21,6 @@ describe('HealthController', () => {
     }).compile();
 
     controller = module.get<HealthController>(HealthController);
-    healthService = module.get<HealthService>(HealthService);
   });
 
   it('should be defined', () => {
@@ -51,7 +49,7 @@ describe('HealthController', () => {
       const result = await controller.healthCheck();
 
       expect(result).toBe(expectedResult);
-      expect(healthService.getHealthStatus).toHaveBeenCalledTimes(1);
+      expect(mockHealthService.getHealthStatus).toHaveBeenCalledTimes(1);
     });
 
     it('should handle service errors', async () => {
@@ -59,7 +57,7 @@ describe('HealthController', () => {
       mockHealthService.getHealthStatus.mockRejectedValue(error);
 
       await expect(controller.healthCheck()).rejects.toThrow('Service error');
-      expect(healthService.getHealthStatus).toHaveBeenCalledTimes(1);
+      expect(mockHealthService.getHealthStatus).toHaveBeenCalledTimes(1);
     });
 
     it('should return the exact response from service', async () => {

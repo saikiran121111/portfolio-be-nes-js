@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../../src/prisma/prisma.service';
-import { PrismaClient } from '@prisma/client';
 
 describe('PrismaService', () => {
   let service: PrismaService;
@@ -13,10 +12,14 @@ describe('PrismaService', () => {
     }).compile();
 
     service = module.get<PrismaService>(PrismaService);
-    
+
     // Mock the connection methods after service is created
-    connectSpy = jest.spyOn(service, '$connect').mockImplementation(() => Promise.resolve());
-    disconnectSpy = jest.spyOn(service, '$disconnect').mockImplementation(() => Promise.resolve());
+    connectSpy = jest
+      .spyOn(service, '$connect')
+      .mockImplementation(() => Promise.resolve());
+    disconnectSpy = jest
+      .spyOn(service, '$disconnect')
+      .mockImplementation(() => Promise.resolve());
   });
 
   afterEach(() => {
@@ -61,7 +64,9 @@ describe('PrismaService', () => {
       const error = new Error('Disconnection failed');
       disconnectSpy.mockRejectedValue(error);
 
-      await expect(service.onModuleDestroy()).rejects.toThrow('Disconnection failed');
+      await expect(service.onModuleDestroy()).rejects.toThrow(
+        'Disconnection failed',
+      );
       expect(disconnectSpy).toHaveBeenCalledTimes(1);
     });
   });

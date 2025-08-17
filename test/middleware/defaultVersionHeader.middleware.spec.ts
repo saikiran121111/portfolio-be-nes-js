@@ -78,7 +78,7 @@ describe('defaultVersionHeaderMiddleware', () => {
       mockNext,
     );
 
-    expect(mockRequest.headers!['version']).toBe(HEADER_VERSION);
+    expect(mockRequest.headers['version']).toBe(HEADER_VERSION);
     expect(mockNext).toHaveBeenCalledTimes(1);
   });
 });

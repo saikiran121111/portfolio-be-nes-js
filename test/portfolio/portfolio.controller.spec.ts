@@ -11,14 +11,14 @@ jest.mock('../../src/portfolio/dto/portfolio.response.dto', () => ({
 }));
 
 jest.mock('class-transformer', () => ({
-  instanceToPlain: jest.fn((obj) => obj),
+  instanceToPlain: jest.fn((obj: unknown) => obj),
 }));
 
-const mockToPortfolioResponseDto = toPortfolioResponseDto as jest.MockedFunction<typeof toPortfolioResponseDto>;
+const mockToPortfolioResponseDto =
+  toPortfolioResponseDto as jest.MockedFunction<typeof toPortfolioResponseDto>;
 
 describe('PortfolioController', () => {
   let controller: PortfolioController;
-  let portfolioService: PortfolioService;
 
   const mockPortfolioService = {
     getPortfolioV1: jest.fn(),
@@ -69,7 +69,6 @@ describe('PortfolioController', () => {
     }).compile();
 
     controller = module.get<PortfolioController>(PortfolioController);
-    portfolioService = module.get<PortfolioService>(PortfolioService);
   });
 
   it('should be defined', () => {
@@ -84,7 +83,7 @@ describe('PortfolioController', () => {
       const result = await controller.getUserV1();
 
       expect(result).toBe(mockV1Data);
-      expect(portfolioService.getPortfolioV1).toHaveBeenCalledTimes(1);
+      expect(mockPortfolioService.getPortfolioV1).toHaveBeenCalledTimes(1);
     });
 
     it('should return null when service returns null', async () => {
@@ -93,7 +92,7 @@ describe('PortfolioController', () => {
       const result = await controller.getUserV1();
 
       expect(result).toBeNull();
-      expect(portfolioService.getPortfolioV1).toHaveBeenCalledTimes(1);
+      expect(mockPortfolioService.getPortfolioV1).toHaveBeenCalledTimes(1);
     });
 
     it('should handle service errors', async () => {
@@ -101,7 +100,7 @@ describe('PortfolioController', () => {
       mockPortfolioService.getPortfolioV1.mockRejectedValue(error);
 
       await expect(controller.getUserV1()).rejects.toThrow('Service error');
-      expect(portfolioService.getPortfolioV1).toHaveBeenCalledTimes(1);
+      expect(mockPortfolioService.getPortfolioV1).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -113,8 +112,10 @@ describe('PortfolioController', () => {
       const result = await controller.getUserV2();
 
       expect(result).toBe(mockPortfolioDto);
-      expect(portfolioService.getPortfolioV2).toHaveBeenCalledTimes(1);
-      expect(toPortfolioResponseDto).toHaveBeenCalledWith(mockPortfolioData);
+      expect(mockPortfolioService.getPortfolioV2).toHaveBeenCalledTimes(1);
+      expect(mockToPortfolioResponseDto).toHaveBeenCalledWith(
+        mockPortfolioData,
+      );
     });
 
     it('should return null when service returns null', async () => {
@@ -123,8 +124,8 @@ describe('PortfolioController', () => {
       const result = await controller.getUserV2();
 
       expect(result).toBeNull();
-      expect(portfolioService.getPortfolioV2).toHaveBeenCalledTimes(1);
-      expect(toPortfolioResponseDto).not.toHaveBeenCalled();
+      expect(mockPortfolioService.getPortfolioV2).toHaveBeenCalledTimes(1);
+      expect(mockToPortfolioResponseDto).not.toHaveBeenCalled();
     });
 
     it('should handle service errors', async () => {
@@ -132,7 +133,7 @@ describe('PortfolioController', () => {
       mockPortfolioService.getPortfolioV2.mockRejectedValue(error);
 
       await expect(controller.getUserV2()).rejects.toThrow('Service error');
-      expect(portfolioService.getPortfolioV2).toHaveBeenCalledTimes(1);
+      expect(mockPortfolioService.getPortfolioV2).toHaveBeenCalledTimes(1);
     });
 
     it('should use correct version header', () => {
@@ -143,17 +144,31 @@ describe('PortfolioController', () => {
 
   describe('API decorators', () => {
     it('should have correct controller path', () => {
-      const controllerMetadata = Reflect.getMetadata('path', PortfolioController);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const controllerMetadata = Reflect.getMetadata(
+        'path',
+        PortfolioController,
+      );
       expect(controllerMetadata).toBe('api/portfolio');
     });
 
     it('should have Get decorator on getUserV1', () => {
-      const getMetadata = Reflect.getMetadata('path', controller.getUserV1);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const getMetadata = Reflect.getMetadata(
+        'path',
+        // eslint-disable-next-line @typescript-eslint/unbound-method
+        controller.getUserV1 as any,
+      );
       expect(getMetadata).toBe('user');
     });
 
     it('should have Get decorator on getUserV2', () => {
-      const getMetadata = Reflect.getMetadata('path', controller.getUserV2);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const getMetadata = Reflect.getMetadata(
+        'path',
+        // eslint-disable-next-line @typescript-eslint/unbound-method
+        controller.getUserV2 as any,
+      );
       expect(getMetadata).toBe('user');
     });
   });

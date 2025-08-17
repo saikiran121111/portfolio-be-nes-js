@@ -5,7 +5,6 @@ import { mockPrismaService } from '../setup';
 
 describe('HealthService', () => {
   let service: HealthService;
-  let prismaService: PrismaService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -19,7 +18,6 @@ describe('HealthService', () => {
     }).compile();
 
     service = module.get<HealthService>(HealthService);
-    prismaService = module.get<PrismaService>(PrismaService);
   });
 
   it('should be defined', () => {
@@ -46,7 +44,9 @@ describe('HealthService', () => {
     });
 
     it('should return health status with db error when database fails', async () => {
-      mockPrismaService.$queryRaw.mockRejectedValue(new Error('Database connection failed'));
+      mockPrismaService.$queryRaw.mockRejectedValue(
+        new Error('Database connection failed'),
+      );
 
       const result = await service.getHealthStatus();
 
