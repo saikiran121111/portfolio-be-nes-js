@@ -21,11 +21,22 @@ export class PortfolioService {
         languages: true,
         scanReports: true,
         bottomHeadlines: { orderBy: { order: 'asc' } },
+        repoData: {
+          select: {
+            nestJSGitRepo: true,
+            nestJSDeployedServer: true,
+            nestJSSwaggerUrl: true,
+            nextJSGitRepo: true,
+            nextJSDeployedServer: true,
+            postgresDeployedServer: true,
+          },
+        },
       },
     });
     if (!user) {
       return null;
     }
+
     return mapPortfolioFromDb(user);
   }
 
