@@ -25,7 +25,7 @@ describe('KeepAliveService', () => {
 
     service = module.get<KeepAliveService>(KeepAliveService);
     prismaService = module.get(PrismaService);
-    
+
     // Spy on logger methods
     loggerSpy = jest.spyOn(Logger.prototype, 'debug').mockImplementation();
     jest.spyOn(Logger.prototype, 'warn').mockImplementation();
@@ -49,7 +49,9 @@ describe('KeepAliveService', () => {
 
       // Assert
       expect(prismaService.$queryRaw).toHaveBeenCalledWith(['SELECT 1']);
-      expect(Logger.prototype.debug).toHaveBeenCalledWith('Neon keep-alive ping successful');
+      expect(Logger.prototype.debug).toHaveBeenCalledWith(
+        'Neon keep-alive ping successful',
+      );
       expect(Logger.prototype.warn).not.toHaveBeenCalled();
     });
 
@@ -64,7 +66,9 @@ describe('KeepAliveService', () => {
 
       // Assert
       expect(prismaService.$queryRaw).toHaveBeenCalledWith(['SELECT 1']);
-      expect(Logger.prototype.warn).toHaveBeenCalledWith(`Neon keep-alive ping failed: Error: ${errorMessage}`);
+      expect(Logger.prototype.warn).toHaveBeenCalledWith(
+        `Neon keep-alive ping failed: Error: ${errorMessage}`,
+      );
       expect(Logger.prototype.debug).not.toHaveBeenCalled();
     });
 
@@ -78,7 +82,9 @@ describe('KeepAliveService', () => {
 
       // Assert
       expect(prismaService.$queryRaw).toHaveBeenCalledWith(['SELECT 1']);
-      expect(Logger.prototype.warn).toHaveBeenCalledWith(`Neon keep-alive ping failed: ${errorMessage}`);
+      expect(Logger.prototype.warn).toHaveBeenCalledWith(
+        `Neon keep-alive ping failed: ${errorMessage}`,
+      );
       expect(Logger.prototype.debug).not.toHaveBeenCalled();
     });
 
@@ -91,7 +97,9 @@ describe('KeepAliveService', () => {
 
       // Assert
       expect(prismaService.$queryRaw).toHaveBeenCalledWith(['SELECT 1']);
-      expect(Logger.prototype.warn).toHaveBeenCalledWith('Neon keep-alive ping failed: null');
+      expect(Logger.prototype.warn).toHaveBeenCalledWith(
+        'Neon keep-alive ping failed: null',
+      );
       expect(Logger.prototype.debug).not.toHaveBeenCalled();
     });
 
@@ -106,7 +114,9 @@ describe('KeepAliveService', () => {
 
       // Assert
       expect(prismaService.$queryRaw).toHaveBeenCalledWith(['SELECT 1']);
-      expect(Logger.prototype.warn).toHaveBeenCalledWith(`Neon keep-alive ping failed: TimeoutError: Connection timeout`);
+      expect(Logger.prototype.warn).toHaveBeenCalledWith(
+        `Neon keep-alive ping failed: TimeoutError: Connection timeout`,
+      );
       expect(Logger.prototype.debug).not.toHaveBeenCalled();
     });
 

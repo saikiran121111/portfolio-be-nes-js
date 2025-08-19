@@ -124,7 +124,7 @@ describe('AppController', () => {
       // Arrange
       const firstMessage = 'First Hello';
       const secondMessage = 'Second Hello';
-      
+
       appService.getHello
         .mockReturnValueOnce(firstMessage)
         .mockReturnValueOnce(secondMessage);
