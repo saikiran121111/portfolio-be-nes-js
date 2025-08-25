@@ -5,7 +5,6 @@ import { PortfolioModule } from './portfolio/portfolio.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { HealthModule } from './health/health.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { KeepAliveService } from './tasks/keep-alive.service';
 
 @Module({
   imports: [
@@ -15,6 +14,6 @@ import { KeepAliveService } from './tasks/keep-alive.service';
     HealthModule,
   ],
   controllers: [AppController],
-  providers: [AppService, KeepAliveService],
+  providers: [AppService],
 })
 export class AppModule {}

@@ -9,7 +9,6 @@ export default tseslint.config(
     ignores: [
       'eslint.config.mjs',
       'test/app.controller.spec.ts',
-      'test/tasks/keep-alive.service.spec.ts'
     ],
   },
   eslint.configs.recommended,
