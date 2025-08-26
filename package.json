@@ -12,7 +12,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/src/main.js",
+    "start:prod": "npx prisma migrate deploy && node dist/src/main.js",
     "start:prod:env": "dotenv -e .env -- node dist/src/main.js",
     "prisma:generate": "DOTENV_CONFIG_PATH=env/local/.env.prisma npx prisma generate",
     "prisma:migrate": "npx prisma migrate dev",

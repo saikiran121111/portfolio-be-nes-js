@@ -9,12 +9,30 @@ export class PrismaService
   constructor() {
     super({
       datasources: {
-        db: { url: process.env.DATABASE_URL },
+        db: {
+          url: process.env.DATABASE_URL,
+        },
       },
     });
   }
+
+  // Retry logic for DB connection
   async onModuleInit() {
-    await this.$connect();
+    const maxRetries = 5;
+    const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+    let attempt = 0;
+    while (attempt < maxRetries) {
+      try {
+        await this.$connect();
+        return;
+      } catch (err) {
+        attempt++;
+        if (attempt >= maxRetries) {
+          throw err;
+        }
+        await delay(1000 * attempt); // Exponential backoff
+      }
+    }
   }
 
   async onModuleDestroy() {
