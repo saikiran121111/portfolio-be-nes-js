@@ -51,7 +51,7 @@
     "prod:prepare": "npm install && npm run build && npm run prisma:generate:prod && npm run prisma:migrate:prod"
   },
   "dependencies": {
-    "@nestjs/common": "^11.0.1",
+    "@nestjs/common": "^11.1.8",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/schedule": "^6.0.0",
