@@ -4,7 +4,6 @@ import { PrismaClient } from '@prisma/client';
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(PrismaService.name);
-  private keepAliveInterval: NodeJS.Timeout;
 
   constructor() {
     super({
@@ -16,7 +15,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     });
   }
 
-  // Retry logic for DB connection + Keep-alive
+  // Retry logic for DB connection
   async onModuleInit() {
     const maxRetries = 5;
     const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
@@ -37,22 +36,10 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
         await delay(1000 * attempt); // Exponential backoff
       }
     }
-
-    // Keep-alive query every 1 minute
-    this.keepAliveInterval = setInterval(async () => {
-      try {
-        await this.$queryRaw`SELECT 1`;
-        this.logger.debug('Keep-alive query executed');
-      } catch (err) {
-        this.logger.error('Keep-alive query failed', err);
-      }
-    }, 60000);
+    // Note: Keep-alive is handled by KeepAliveService (every 30 seconds)
   }
 
   async onModuleDestroy() {
-    if (this.keepAliveInterval) {
-      clearInterval(this.keepAliveInterval);
-    }
     await this.$disconnect();
     this.logger.log('Database disconnected');
   }
