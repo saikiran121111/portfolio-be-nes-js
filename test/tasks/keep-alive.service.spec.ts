@@ -6,7 +6,8 @@ import { PrismaService } from '../../src/prisma/prisma.service';
 describe('KeepAliveService', () => {
   let service: KeepAliveService;
   let prismaService: jest.Mocked<PrismaService>;
-  let loggerSpy: jest.SpyInstance;
+  let loggerLogSpy: jest.SpyInstance;
+  let loggerErrorSpy: jest.SpyInstance;
 
   beforeEach(async () => {
     const mockPrismaService = {
@@ -27,8 +28,8 @@ describe('KeepAliveService', () => {
     prismaService = module.get(PrismaService);
 
     // Spy on logger methods
-    loggerSpy = jest.spyOn(Logger.prototype, 'debug').mockImplementation();
-    jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+    loggerLogSpy = jest.spyOn(Logger.prototype, 'log').mockImplementation();
+    loggerErrorSpy = jest.spyOn(Logger.prototype, 'error').mockImplementation();
   });
 
   afterEach(() => {
@@ -39,23 +40,39 @@ describe('KeepAliveService', () => {
     expect(service).toBeDefined();
   });
 
+  describe('onModuleInit', () => {
+    it('should log startup message and ping database', async () => {
+      // Arrange
+      prismaService.$queryRaw.mockResolvedValue([{ alive: 1 }]);
+
+      // Act
+      await service.onModuleInit();
+
+      // Assert
+      expect(loggerLogSpy).toHaveBeenCalledWith('=== KeepAliveService STARTED ===');
+      expect(loggerLogSpy).toHaveBeenCalledWith(
+        'Database will be pinged every 30 seconds to prevent Supabase from sleeping',
+      );
+      expect(prismaService.$queryRaw).toHaveBeenCalled();
+    });
+  });
+
   describe('pingDb', () => {
     it('should successfully ping the database and log success', async () => {
       // Arrange
-      prismaService.$queryRaw.mockResolvedValue([{ '?column?': 1 }]);
+      prismaService.$queryRaw.mockResolvedValue([{ alive: 1 }]);
 
       // Act
       await service.pingDb();
 
       // Assert
-      expect(prismaService.$queryRaw).toHaveBeenCalledWith(['SELECT 1']);
-      expect(Logger.prototype.debug).toHaveBeenCalledWith(
-        'Neon keep-alive ping successful',
-      );
-      expect(Logger.prototype.warn).not.toHaveBeenCalled();
+      expect(prismaService.$queryRaw).toHaveBeenCalledWith(['SELECT 1 as alive']);
+      expect(loggerLogSpy).toHaveBeenCalledWith(expect.stringContaining('Pinging database at'));
+      expect(loggerLogSpy).toHaveBeenCalledWith(expect.stringContaining('SUCCESS'));
+      expect(loggerLogSpy).toHaveBeenCalledWith(expect.stringContaining('Database is ALIVE'));
     });
 
-    it('should handle database errors and log warning', async () => {
+    it('should handle database errors and log error', async () => {
       // Arrange
       const errorMessage = 'Database connection failed';
       const error = new Error(errorMessage);
@@ -65,14 +82,13 @@ describe('KeepAliveService', () => {
       await service.pingDb();
 
       // Assert
-      expect(prismaService.$queryRaw).toHaveBeenCalledWith(['SELECT 1']);
-      expect(Logger.prototype.warn).toHaveBeenCalledWith(
-        `Neon keep-alive ping failed: Error: ${errorMessage}`,
-      );
-      expect(Logger.prototype.debug).not.toHaveBeenCalled();
+      expect(prismaService.$queryRaw).toHaveBeenCalledWith(['SELECT 1 as alive']);
+      expect(loggerErrorSpy).toHaveBeenCalledWith(expect.stringContaining('FAILED'));
+      expect(loggerErrorSpy).toHaveBeenCalledWith(expect.stringContaining('Database ERROR'));
+      expect(loggerErrorSpy).toHaveBeenCalledWith(expect.stringContaining(errorMessage));
     });
 
-    it('should handle non-Error objects and log warning', async () => {
+    it('should handle non-Error objects and log error', async () => {
       // Arrange
       const errorMessage = 'String error';
       prismaService.$queryRaw.mockRejectedValue(errorMessage);
@@ -81,11 +97,9 @@ describe('KeepAliveService', () => {
       await service.pingDb();
 
       // Assert
-      expect(prismaService.$queryRaw).toHaveBeenCalledWith(['SELECT 1']);
-      expect(Logger.prototype.warn).toHaveBeenCalledWith(
-        `Neon keep-alive ping failed: ${errorMessage}`,
-      );
-      expect(Logger.prototype.debug).not.toHaveBeenCalled();
+      expect(prismaService.$queryRaw).toHaveBeenCalledWith(['SELECT 1 as alive']);
+      expect(loggerErrorSpy).toHaveBeenCalledWith(expect.stringContaining('FAILED'));
+      expect(loggerErrorSpy).toHaveBeenCalledWith(expect.stringContaining(errorMessage));
     });
 
     it('should handle null/undefined errors gracefully', async () => {
@@ -96,11 +110,9 @@ describe('KeepAliveService', () => {
       await service.pingDb();
 
       // Assert
-      expect(prismaService.$queryRaw).toHaveBeenCalledWith(['SELECT 1']);
-      expect(Logger.prototype.warn).toHaveBeenCalledWith(
-        'Neon keep-alive ping failed: null',
-      );
-      expect(Logger.prototype.debug).not.toHaveBeenCalled();
+      expect(prismaService.$queryRaw).toHaveBeenCalledWith(['SELECT 1 as alive']);
+      expect(loggerErrorSpy).toHaveBeenCalledWith(expect.stringContaining('FAILED'));
+      expect(loggerErrorSpy).toHaveBeenCalledWith(expect.stringContaining('null'));
     });
 
     it('should handle database timeout errors', async () => {
@@ -113,17 +125,21 @@ describe('KeepAliveService', () => {
       await service.pingDb();
 
       // Assert
-      expect(prismaService.$queryRaw).toHaveBeenCalledWith(['SELECT 1']);
-      expect(Logger.prototype.warn).toHaveBeenCalledWith(
-        `Neon keep-alive ping failed: TimeoutError: Connection timeout`,
-      );
-      expect(Logger.prototype.debug).not.toHaveBeenCalled();
+      expect(prismaService.$queryRaw).toHaveBeenCalledWith(['SELECT 1 as alive']);
+      expect(loggerErrorSpy).toHaveBeenCalledWith(expect.stringContaining('FAILED'));
+      expect(loggerErrorSpy).toHaveBeenCalledWith(expect.stringContaining('Connection timeout'));
     });
 
-    it('should call pingDb method without errors', () => {
-      // This test verifies that the pingDb method exists and can be called
-      expect(typeof service.pingDb).toBe('function');
-      expect(service.pingDb).toBeDefined();
+    it('should log timestamp and response time', async () => {
+      // Arrange
+      prismaService.$queryRaw.mockResolvedValue([{ alive: 1 }]);
+
+      // Act
+      await service.pingDb();
+
+      // Assert
+      expect(loggerLogSpy).toHaveBeenCalledWith(expect.stringContaining('Pinging database at'));
+      expect(loggerLogSpy).toHaveBeenCalledWith(expect.stringContaining('Response time:'));
     });
   });
 
@@ -137,5 +153,7 @@ describe('KeepAliveService', () => {
       expect(service['logger']).toBeDefined();
       expect(service['logger']).toBeInstanceOf(Logger);
     });
+
+
   });
 });
