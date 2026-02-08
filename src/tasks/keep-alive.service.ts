@@ -11,12 +11,13 @@ export class KeepAliveService implements OnModuleInit {
   // Runs immediately when the app starts
   async onModuleInit() {
     this.logger.log('=== KeepAliveService STARTED ===');
-    this.logger.log('Database will be pinged every 30 seconds to prevent Supabase from sleeping');
+    this.logger.log('Database will be pinged every 3 days to prevent Supabase from sleeping');
     await this.pingDb();
   }
 
-  // Runs every 30 seconds (30000 ms) to keep Supabase Postgres from sleeping
-  @Interval(30000)
+  // Runs every 3 days (259200000 ms) to keep Supabase Postgres from sleeping
+  // Supabase free tier goes inactive after 1 week of no queries, so 2 pings per week is sufficient
+  @Interval(259200000)
   async pingDb() {
     const startTime = Date.now();
     const timestamp = new Date().toISOString();

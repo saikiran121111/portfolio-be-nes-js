@@ -51,7 +51,7 @@ describe('KeepAliveService', () => {
       // Assert
       expect(loggerLogSpy).toHaveBeenCalledWith('=== KeepAliveService STARTED ===');
       expect(loggerLogSpy).toHaveBeenCalledWith(
-        'Database will be pinged every 30 seconds to prevent Supabase from sleeping',
+        'Database will be pinged every 3 days to prevent Supabase from sleeping',
       );
       expect(prismaService.$queryRaw).toHaveBeenCalled();
     });
