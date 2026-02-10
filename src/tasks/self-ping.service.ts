@@ -3,9 +3,9 @@ import { Interval } from '@nestjs/schedule';
 import * as http from 'http';
 import * as https from 'https';
 
-// Self-ping interval: 10 minutes (600,000 ms)
-// Render free tier sleeps after ~15 min of inactivity, so 10 min is safely within that window
-const SELF_PING_INTERVAL_MS = 600_000;
+// Self-ping interval: 5 minutes (300,000 ms)
+// Render free tier sleeps after ~15 min of inactivity, so 5 min gives a 3x safety margin
+const SELF_PING_INTERVAL_MS = 300_000;
 
 @Injectable()
 export class SelfPingService implements OnModuleInit {
@@ -19,7 +19,7 @@ export class SelfPingService implements OnModuleInit {
             this.pingUrl = selfPingUrl;
             this.logger.log('=== SelfPingService STARTED ===');
             this.logger.log(`Target: ${this.pingUrl}`);
-            this.logger.log(`Interval: every 10 minutes (${SELF_PING_INTERVAL_MS}ms)`);
+            this.logger.log(`Interval: every 5 minutes (${SELF_PING_INTERVAL_MS}ms)`);
         } else {
             this.logger.warn(
                 'SELF_PING_URL not set — self-ping is DISABLED (set it in production to prevent Render sleep)',
