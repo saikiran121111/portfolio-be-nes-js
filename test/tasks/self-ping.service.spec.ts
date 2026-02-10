@@ -55,7 +55,7 @@ describe('SelfPingService', () => {
                 expect.stringContaining('https://my-app.onrender.com/health'),
             );
             expect(loggerLogSpy).toHaveBeenCalledWith(
-                expect.stringContaining('every 10 minutes'),
+                expect.stringContaining('every 5 minutes'),
             );
         });
 
