@@ -36,7 +36,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
         await delay(1000 * attempt); // Exponential backoff
       }
     }
-    // Note: DB keep-alive handled by KeepAliveService (every 3 days), server keep-alive by SelfPingService (every 10 min)
+    // Note: DB keep-alive handled by KeepAliveService (daily health check + retry), server keep-alive by SelfPingService (every 10 min)
   }
 
   async onModuleDestroy() {

@@ -11,7 +11,6 @@ const SELF_PING_INTERVAL_MS = 600_000;
 export class SelfPingService implements OnModuleInit {
     private readonly logger = new Logger(SelfPingService.name);
     private pingUrl: string | null = null;
-    private pingCount = 0;
 
     onModuleInit() {
         const selfPingUrl = process.env.SELF_PING_URL;
@@ -21,7 +20,6 @@ export class SelfPingService implements OnModuleInit {
             this.logger.log('=== SelfPingService STARTED ===');
             this.logger.log(`Target: ${this.pingUrl}`);
             this.logger.log(`Interval: every 10 minutes (${SELF_PING_INTERVAL_MS}ms)`);
-            this.logger.log(`First ping scheduled at: ${new Date(Date.now() + SELF_PING_INTERVAL_MS).toISOString()}`);
         } else {
             this.logger.warn(
                 'SELF_PING_URL not set — self-ping is DISABLED (set it in production to prevent Render sleep)',
@@ -35,24 +33,21 @@ export class SelfPingService implements OnModuleInit {
             return;
         }
 
-        this.pingCount++;
         const startTime = Date.now();
         const timestamp = new Date().toISOString();
 
-        this.logger.log(`[Ping #${this.pingCount}] Pinging ${this.pingUrl} at ${timestamp}...`);
+        this.logger.log(`Pinging ${this.pingUrl} at ${timestamp}...`);
 
         try {
             const statusCode = await this.makeRequest(this.pingUrl);
             const responseTime = Date.now() - startTime;
-            const nextPingAt = new Date(Date.now() + SELF_PING_INTERVAL_MS).toISOString();
             this.logger.log(
-                `[Ping #${this.pingCount}] SUCCESS | Status: ${statusCode} | Response time: ${responseTime}ms | Next ping at: ${nextPingAt}`,
+                `SUCCESS | Status: ${statusCode} | Response time: ${responseTime}ms`,
             );
         } catch (err) {
             const responseTime = Date.now() - startTime;
-            const nextPingAt = new Date(Date.now() + SELF_PING_INTERVAL_MS).toISOString();
             this.logger.error(
-                `[Ping #${this.pingCount}] FAILED | Response time: ${responseTime}ms | Next ping at: ${nextPingAt} | Error: ${String(err)}`,
+                `FAILED | Response time: ${responseTime}ms | Error: ${String(err)}`,
             );
         }
     }

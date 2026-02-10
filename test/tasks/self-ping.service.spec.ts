@@ -250,68 +250,6 @@ describe('SelfPingService', () => {
             // Assert
             expect(mockRequest.setTimeout).toHaveBeenCalledWith(30_000, expect.any(Function));
         });
-
-        it('should increment ping counter on each ping', async () => {
-            // Arrange
-            process.env.SELF_PING_URL = 'https://my-app.onrender.com/health';
-            service.onModuleInit();
-            jest.clearAllMocks();
-
-            const mockResponse = {
-                statusCode: 200,
-                resume: jest.fn(),
-            };
-            const mockRequest = {
-                on: jest.fn(),
-                setTimeout: jest.fn(),
-            };
-
-            (https.get as jest.Mock).mockImplementation((_url, callback) => {
-                callback(mockResponse);
-                return mockRequest;
-            });
-
-            // Act — ping twice
-            await service.pingSelf();
-            await service.pingSelf();
-
-            // Assert — should show Ping #1 and Ping #2
-            expect(loggerLogSpy).toHaveBeenCalledWith(
-                expect.stringContaining('[Ping #1]'),
-            );
-            expect(loggerLogSpy).toHaveBeenCalledWith(
-                expect.stringContaining('[Ping #2]'),
-            );
-        });
-
-        it('should log next ping timestamp on success', async () => {
-            // Arrange
-            process.env.SELF_PING_URL = 'https://my-app.onrender.com/health';
-            service.onModuleInit();
-            jest.clearAllMocks();
-
-            const mockResponse = {
-                statusCode: 200,
-                resume: jest.fn(),
-            };
-            const mockRequest = {
-                on: jest.fn(),
-                setTimeout: jest.fn(),
-            };
-
-            (https.get as jest.Mock).mockImplementation((_url, callback) => {
-                callback(mockResponse);
-                return mockRequest;
-            });
-
-            // Act
-            await service.pingSelf();
-
-            // Assert
-            expect(loggerLogSpy).toHaveBeenCalledWith(
-                expect.stringContaining('Next ping at:'),
-            );
-        });
     });
 
     describe('constructor', () => {
