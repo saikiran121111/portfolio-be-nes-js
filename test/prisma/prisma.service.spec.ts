@@ -44,12 +44,16 @@ describe('PrismaService', () => {
       expect(connectSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('should handle connection errors', async () => {
+    it('should handle connection errors after retries', async () => {
       const error = new Error('Connection failed');
       connectSpy.mockRejectedValue(error);
 
+      // Mock delay to resolve instantly
+      jest.spyOn(service as any, 'delay').mockResolvedValue(undefined);
+
       await expect(service.onModuleInit()).rejects.toThrow('Connection failed');
-      expect(connectSpy).toHaveBeenCalledTimes(1);
+      // 7 retries total (MAX_RETRIES = 7)
+      expect(connectSpy).toHaveBeenCalledTimes(7);
     });
   });
 
