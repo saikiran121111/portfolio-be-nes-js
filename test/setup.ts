@@ -1,4 +1,7 @@
 // Test setup file for Jest
+// Provide a dummy DATABASE_URL so PrismaClient can be instantiated in tests
+process.env.DATABASE_URL = process.env.DATABASE_URL || 'postgresql://test:test@localhost:5432/test';
+
 import { Test } from '@nestjs/testing';
 
 // Mock PrismaService for all tests
