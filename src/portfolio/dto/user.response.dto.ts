@@ -150,3 +150,12 @@ export class ToolDocDto {
   @ApiPropertyOptional()
   order?: number;
 }
+
+export class HomepageProjectDto {
+  @ApiProperty()
+  title!: string;
+
+  @ApiProperty()
+  url!: string;
+}
+

@@ -9,6 +9,7 @@ import {
   Achievement,
   Language,
   ScanReport,
+  HomepageProject,
 } from '@prisma/client';
 import {
   IAchievements,
@@ -177,6 +178,7 @@ export function mapPortfolioFromDb(
       nextJSDeployedServer: string | null;
       postgresDeployedServer: string | null;
     } | null;
+    homepageProjects?: HomepageProject[];
   },
 ): IPortfolio {
   const r = user.repoData ?? null;
@@ -216,6 +218,12 @@ export function mapPortfolioFromDb(
     languages: user.languages.map(mapLanguageFromDb),
     scanReports: user.scanReports.map(mapScanReportsFromDb),
     bottomHeadline,
+    homepageProjects: user.homepageProjects?.map((hp) => ({
+      id: hp.id,
+      title: hp.title,
+      url: hp.url,
+      order: hp.order,
+    })) || [],
     toolDocs: getOrderedToolDocs(),
   } satisfies IPortfolio;
 

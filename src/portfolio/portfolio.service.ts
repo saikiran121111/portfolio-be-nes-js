@@ -17,6 +17,7 @@ const adminPortfolioInclude = {
   scanReports: { orderBy: { runAt: 'desc' as const } },
   bottomHeadlines: { orderBy: { order: 'asc' as const } },
   repoData: true,
+  homepageProjects: { orderBy: { order: 'asc' as const } },
 } as const;
 
 type NullableString = string | null | undefined;
@@ -129,6 +130,7 @@ export class PortfolioService {
         languages: true,
         scanReports: true,
         bottomHeadlines: { orderBy: { order: 'asc' } },
+        homepageProjects: { orderBy: { order: 'asc' } },
         repoData: {
           select: {
             nestJSGitRepo: true,
@@ -226,6 +228,18 @@ export class PortfolioService {
       } else if (existingRepoData) {
         await tx.repoData.delete({
           where: { userId },
+        });
+      }
+
+      await tx.homepageProject.deleteMany({ where: { userId } });
+      if (payload.homepageProjects.length) {
+        await tx.homepageProject.createMany({
+          data: payload.homepageProjects.map((project, index) => ({
+            userId,
+            title: toTrimmedRequiredString(project.title, "homepageProjects[].title"),
+            url: toTrimmedRequiredString(project.url, "homepageProjects[].url"),
+            order: index,
+          })),
         });
       }
 

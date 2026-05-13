@@ -113,6 +113,13 @@ export interface IAdminScanReport {
   artifactUrl: string | null;
 }
 
+export interface IAdminHomepageProject {
+  id?: number;
+  title: string;
+  url: string;
+  order: number;
+}
+
 export interface IAdminPortfolio {
   user: IAdminUserProfile;
   repoData: IAdminRepoData;
@@ -125,4 +132,5 @@ export interface IAdminPortfolio {
   achievements: IAdminAchievement[];
   languages: IAdminLanguage[];
   scanReports: IAdminScanReport[];
+  homepageProjects: IAdminHomepageProject[];
 }

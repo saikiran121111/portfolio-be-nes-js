@@ -9,6 +9,13 @@ import {
   IscanReports,
 } from './user.interface';
 
+export interface IHomepageProject {
+  id?: number;
+  title: string;
+  url: string;
+  order: number;
+}
+
 export interface IPortfolio {
   name: string;
   email: string;
@@ -33,6 +40,7 @@ export interface IPortfolio {
   languages?: ILanguages[];
   scanReports?: IscanReports[];
   bottomHeadline?: string[];
+  homepageProjects?: IHomepageProject[];
   toolDocs?: IToolDoc[];
 }
 

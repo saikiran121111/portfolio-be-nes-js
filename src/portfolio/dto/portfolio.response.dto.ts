@@ -10,6 +10,7 @@ import {
   ScanReportDto,
   SocialsDto,
   ToolDocDto,
+  HomepageProjectDto,
 } from './user.response.dto';
 import { IPortfolio } from '../interface/portfolio.interface';
 
@@ -78,6 +79,9 @@ export class PortfolioResponseDto {
 
   @ApiPropertyOptional({ type: () => [String] })
   bottomHeadline?: string[];
+
+  @ApiPropertyOptional({ type: () => [HomepageProjectDto] })
+  homepageProjects?: HomepageProjectDto[];
 
   @ApiPropertyOptional({ type: () => [ToolDocDto] })
   toolDocs?: ToolDocDto[];

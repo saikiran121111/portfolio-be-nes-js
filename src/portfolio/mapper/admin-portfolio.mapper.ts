@@ -11,6 +11,7 @@ import {
   ScanReport,
   Skill,
   User,
+  HomepageProject,
 } from '@prisma/client';
 import {
   IAdminAchievement,
@@ -25,6 +26,7 @@ import {
   IAdminSkill,
   IAdminSocials,
   IAdminUserProfile,
+  IAdminHomepageProject,
 } from '../interface/admin-portfolio.interface';
 
 const asRecord = (value: unknown): Record<string, unknown> | undefined =>
@@ -201,6 +203,15 @@ function mapBottomHeadlineFromDb(bottomHeadline: BottomHeadline) {
   };
 }
 
+function mapHomepageProjectFromDb(homepageProject: HomepageProject): IAdminHomepageProject {
+  return {
+    id: homepageProject.id,
+    title: homepageProject.title,
+    url: homepageProject.url,
+    order: homepageProject.order,
+  };
+}
+
 export function mapAdminPortfolioFromDb(
   user: User & {
     skills: Skill[];
@@ -213,6 +224,7 @@ export function mapAdminPortfolioFromDb(
     scanReports: ScanReport[];
     bottomHeadlines: BottomHeadline[];
     repoData: RepoData | null;
+    homepageProjects: HomepageProject[];
   },
 ): IAdminPortfolio {
   return {
@@ -227,5 +239,6 @@ export function mapAdminPortfolioFromDb(
     achievements: user.achievements.map(mapAchievementFromDb),
     languages: user.languages.map(mapLanguageFromDb),
     scanReports: user.scanReports.map(mapScanReportFromDb),
+    homepageProjects: user.homepageProjects.map(mapHomepageProjectFromDb),
   };
 }
