@@ -405,8 +405,11 @@ describe('Portfolio Mapper', () => {
             id: 1,
             title: 'Portfolio Website',
             description: 'Personal portfolio',
+            projectUrl: 'https://portfolio.com',
             repoUrl: 'https://github.com/user/portfolio',
             liveUrl: 'https://portfolio.com',
+            type: 'Live Demo',
+            isVisible: true,
             tech: ['React', 'TypeScript'],
             highlights: ['Responsive design', 'SEO optimized'],
             startDate: new Date('2023-01-01'),
@@ -417,8 +420,11 @@ describe('Portfolio Mapper', () => {
             id: 2,
             title: 'API Service',
             description: 'REST API',
+            projectUrl: 'https://github.com/user/api',
             repoUrl: 'https://github.com/user/api',
             liveUrl: 'https://api.service.com',
+            type: 'GitHub',
+            isVisible: true,
             tech: null, // Test null tech
             highlights: null, // Test null highlights
             startDate: new Date('2022-01-01'),
@@ -433,8 +439,11 @@ describe('Portfolio Mapper', () => {
         {
           title: 'Portfolio Website',
           description: 'Personal portfolio',
+          projectUrl: 'https://portfolio.com',
           repoUrl: 'https://github.com/user/portfolio',
           liveUrl: 'https://portfolio.com',
+          type: 'Live Demo',
+          isVisible: true,
           tech: ['React', 'TypeScript'],
           highlights: ['Responsive design', 'SEO optimized'],
           startDate: new Date('2023-01-01'),
@@ -443,8 +452,11 @@ describe('Portfolio Mapper', () => {
         {
           title: 'API Service',
           description: 'REST API',
+          projectUrl: 'https://github.com/user/api',
           repoUrl: 'https://github.com/user/api',
           liveUrl: 'https://api.service.com',
+          type: 'GitHub',
+          isVisible: true,
           tech: [],
           highlights: [],
           startDate: new Date('2022-01-01'),
@@ -460,8 +472,11 @@ describe('Portfolio Mapper', () => {
             id: 1,
             title: 'Portfolio Website',
             description: 'Personal portfolio',
+            projectUrl: 'https://johndoe.com',
             repoUrl: 'https://github.com/john/portfolio',
             liveUrl: 'https://johndoe.com',
+            type: 'Live Demo',
+            isVisible: true,
             tech: null, // Test null tech
             highlights: null, // Test null highlights
             startDate: new Date('2023-01-01'),
@@ -477,8 +492,11 @@ describe('Portfolio Mapper', () => {
         {
           title: 'Portfolio Website',
           description: 'Personal portfolio',
+          projectUrl: 'https://johndoe.com',
           repoUrl: 'https://github.com/john/portfolio',
           liveUrl: 'https://johndoe.com',
+          type: 'Live Demo',
+          isVisible: true,
           tech: [], // Should default to empty array
           highlights: [], // Should default to empty array
           startDate: new Date('2023-01-01'),

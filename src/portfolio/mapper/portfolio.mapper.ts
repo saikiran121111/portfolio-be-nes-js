@@ -69,8 +69,11 @@ function mapProjectFromDb(project: Project): IProjects {
   return {
     title: project.title,
     description: project.description,
+    projectUrl: project.projectUrl,
     repoUrl: project.repoUrl,
     liveUrl: project.liveUrl,
+    type: project.type,
+    isVisible: project.isVisible,
     tech: project.tech || [],
     highlights: project.highlights || [],
     startDate: project.startDate,
@@ -204,7 +207,9 @@ export function mapPortfolioFromDb(
 
     skills: user.skills.map(mapSkillFromDb),
     experiences: user.experiences.map(mapExperienceFromDb),
-    projects: user.projects.map(mapProjectFromDb),
+    projects: user.projects
+      .filter((project) => project.isVisible)
+      .map(mapProjectFromDb),
     education: user.education.map(mapEducationFromDb),
     certifications: user.certifications.map(mapCertificationFromDb),
     achievements: user.achievements.map(mapAchievementFromDb),

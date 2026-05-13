@@ -57,8 +57,11 @@ model Project {
   userId      Int
   title       String
   description String
+  projectUrl  String?
   repoUrl     String?
   liveUrl     String?
+  type        String?
+  isVisible   Boolean   @default(true)
   tech        String[]
   highlights  String[]
   startDate   DateTime?

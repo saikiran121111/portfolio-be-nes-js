@@ -119,7 +119,10 @@ export class PortfolioService {
       include: {
         skills: true,
         experiences: true,
-        projects: true,
+        projects: {
+          where: { isVisible: true },
+          orderBy: { order: 'asc' },
+        },
         education: true,
         certifications: true,
         achievements: true,
@@ -293,8 +296,12 @@ export class PortfolioService {
               project.description,
               `projects[${index}].description`,
             ),
+            projectUrl: toNullableString(project.projectUrl),
             repoUrl: toNullableString(project.repoUrl),
             liveUrl: toNullableString(project.liveUrl),
+            type: toNullableString(project.type),
+            isVisible:
+              typeof project.isVisible === 'boolean' ? project.isVisible : true,
             tech: toStringArray(project.tech),
             highlights: toStringArray(project.highlights),
             startDate: parseOptionalDate(

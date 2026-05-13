@@ -66,9 +66,15 @@ export class ProjectDto {
   @ApiProperty()
   description!: string;
   @ApiPropertyOptional()
+  projectUrl!: string | null;
+  @ApiPropertyOptional()
   repoUrl!: string | null;
   @ApiPropertyOptional()
   liveUrl!: string | null;
+  @ApiPropertyOptional()
+  type!: string | null;
+  @ApiProperty()
+  isVisible!: boolean;
   @ApiProperty({ type: [String] })
   tech!: string[];
   @ApiProperty({ type: [String] })
